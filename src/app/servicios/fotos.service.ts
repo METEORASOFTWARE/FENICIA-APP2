@@ -30,7 +30,7 @@ export class FotosService {
     if (foto.base64String) {
       // Prefijo necesario para mostrar una imagen base64 en HTML
       const imageUrl = `data:image/jpeg;base64,${foto.base64String}`;
-      this.fotos.unshift(imageUrl);
+      this.fotos.push(imageUrl);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { NgModule, isDevMode } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
@@ -17,6 +17,7 @@ import { BtruequeComponent } from './pages/btrueque/btrueque.component';
 import { TokenInterceptor } from './interceptor/token.interceptor';
 import { ModalDetalleGrupoElementoComponent } from './pages/btrueque/modal-detalle-grupo-elemento/modal-detalle-grupo-elemento.component';
 import { TruequeComponent } from './pages/trueque/trueque.component';
+import { ErrorInterceptor } from './interceptor/error.interceptor';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,12 @@ import { TruequeComponent } from './pages/trueque/trueque.component';
       provide: HTTP_INTERCEPTORS, 
       useClass: TokenInterceptor, multi: true 
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor, multi: true
+    },
   ],
   bootstrap: [AppComponent],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class AppModule {}

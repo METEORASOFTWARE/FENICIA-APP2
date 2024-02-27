@@ -8,7 +8,7 @@ export const environment = {
   token : {
     api : `https://fenicia.meteoracolombia.co:8443/realms/meteora/protocol/openid-connect/token`,
     username : `wsm3t30r4.!2023`,
-    password : `zu@yCh@o$sL1N#&`,
+    password : `gmt;g2F4$(k;E}w`,
     grant_type : `password`,
     client_id : `meteora_ws`
   }

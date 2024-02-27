@@ -10,34 +10,110 @@
 <ion-content>
   <form [formGroup]="FORM">
 
-    <ion-item>
-      <ion-label position="stacked">NOMBRE DEL SERVICIO</ion-label>
-      <ion-input class="ion-text-wrap" placeholder="Nombre" formControlName="nombre_servicio"></ion-input>
+    <ion-item lines="none" class="ion-padding-start ion-padding-top ion-padding-end">
+      <ion-input 
+        label="NOMBRE DEL SERVICIO" 
+        [counter]="true"
+        maxlength="100"
+        formControlName="nombre_servicio"
+        labelPlacement="stacked" 
+        placeholder="Máximo 100 caracteres..."></ion-input>
+    </ion-item>
+    
+    <ion-item lines="none" class="ion-padding-start ion-padding-end">
+      <ion-textarea 
+        label="PRODUCTO O SERVICIO OFRECIDO" 
+        labelPlacement="stacked" 
+        [counter]="true" 
+        maxlength="256" 
+        formControlName="descripcion_servicio"
+        placeholder="Máximo 256 caracteres...">
+      </ion-textarea>
     </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">PRODUCTO O SERVICIO OFRECIDO</ion-label>
-      <ion-input class="ion-text-wrap" placeholder="Descripción (puede incluir imágenes)" formControlName="descripcion_servicio"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">Categoría Principal</ion-label>
-      <ion-select placeholder="Selecciona una categoría" (ionChange)="selectCategoryPrincipal($event)">
-        <ion-select-option *ngFor="let categoryMajor of GRUPO_ELEMENTOS">
+    <ion-item class="ion-padding-start ion-padding-end">
+      <ion-select label="CATEGORÍA" label-placement="stacked" placeholder="--- seleccione ---">
+        <ion-select-option *ngFor="let categoryMajor of GRUPO_ELEMENTOS" value="categoryMajor.COD_NIVEL">
           {{ categoryMajor.DESC_NIVEL }}
         </ion-select-option>
       </ion-select>
     </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">Categorías Secundarias</ion-label>
-      <ion-list>
-        <ion-item *ngFor="let category of CATEGORIAS">
-          <ion-label>{{ category.DESC_NIVEL }}</ion-label>
-          <ion-checkbox slot="start" [(ngModel)]="category.SELECTED"></ion-checkbox>
-        </ion-item>
-      </ion-list>
+    <ion-item class="ion-padding-start ion-padding-top ion-padding-end">
+      <ion-select label="CATEGORÍAS SECUNDARIAS" label-placement="stacked" placeholder="--- seleccione ---">
+        <ion-select-option *ngFor="let categoryMajor of GRUPO_ELEMENTOS" value="categoryMajor.COD_NIVEL">
+          {{ categoryMajor.DESC_NIVEL }}
+        </ion-select-option>
+      </ion-select>
     </ion-item>
+
+
+    <ion-grid fixed class="ion-padding">
+      <ion-row>
+        <ion-col size="12">
+          <swiper-container slides-per-view="1" css-mode="true">
+            <swiper-slide *ngFor = "let foto of fotos">
+              <ion-card>
+                <ion-img [src]="foto"></ion-img>
+              </ion-card>
+            </swiper-slide>
+            <!-- <swiper-slide>
+              <ion-card>
+                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+              </ion-card>
+            </swiper-slide>
+            <swiper-slide>
+              <ion-card>
+                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+              </ion-card>
+            </swiper-slide>
+            <swiper-slide>
+              <ion-card>
+                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+              </ion-card>
+            </swiper-slide>
+            <swiper-slide>
+              <ion-card>
+                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+              </ion-card>
+            </swiper-slide>
+            <swiper-slide>
+              <ion-card>
+                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+              </ion-card>
+            </swiper-slide>
+            <swiper-slide>
+              <ion-card>
+                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+              </ion-card>
+            </swiper-slide> -->
+          </swiper-container>          
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
   </form>
 </ion-content>
+
+<ion-footer [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+
+    <ion-buttons slot="start" class="ion-padding-start">
+      <ion-button color="primary" fill="solid">
+        CREAR
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+
+      <!-- <ion-button>
+        <ion-icon slot="icon-only" name="image"></ion-icon>
+      </ion-button> -->
+
+      <ion-button (click)="tomarFoto()">
+        <ion-icon slot="icon-only" name="camera"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    
+  </ion-toolbar>
+</ion-footer>

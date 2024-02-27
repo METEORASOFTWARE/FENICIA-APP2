@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DataGrupoElementos, GrupoElementoInterface } from 'src/app/interface/grupo-elemento-interface';
+import { FotosService } from 'src/app/servicios/fotos.service';
 import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
 
 @Component({
@@ -13,12 +14,15 @@ export class TruequeComponent  implements OnInit {
   FORM: FormGroup;
   GRUPO_ELEMENTOS : DataGrupoElementos[] = []
   CATEGORIAS : DataGrupoElementos[] = []
+  fotos: string[] = [];
 
   constructor(
     private fb: FormBuilder,
     private truequeSrv: TruequeService,
+    private fotosService: FotosService,
   ) { 
     this.FORM = this.createForm();
+    this.fotos = this.fotosService.fotos;
   }
 
   ngOnInit() {
@@ -44,9 +48,13 @@ export class TruequeComponent  implements OnInit {
     });
   }
 
+  async tomarFoto() {
+    await this.fotosService.agregarFoto();
+  }
+
   
   selectCategoryPrincipal($event:any):void{
-    var selectedCategory = $event.detail.value; // Aquí obtienes el valor de la categoría seleccionada
+    var selectedCategory = $event.detail.value;
     
     if(selectedCategory){
       let GRUPO_ELEMENTOS_CURRENT = selectedCategory.COD_NIVEL;
