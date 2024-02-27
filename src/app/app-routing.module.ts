@@ -3,8 +3,9 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { RegistroComponent } from './pages/registro/registro.component';
 import { ComunidadComponent } from './pages/comunidad/comunidad.component';
-import { TruequeComponent } from './pages/trueque/trueque.component';
+
 import { BtruequeComponent } from './pages/btrueque/btrueque.component';
+import { TruequeComponent } from './pages/trueque/trueque.component';
 
 const routes: Routes = [
   {

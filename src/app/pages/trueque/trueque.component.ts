@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController } from '@ionic/angular';
-import { AuthService } from 'src/app/servicios/auth.service';
-import { FeniciaWsService } from 'src/app/servicios/fenicia-ws.service';
-import { FotosService } from 'src/app/servicios/fotos.service';
-import { TruequeService } from 'src/app/servicios/trueque.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { DataGrupoElementos, GrupoElementoInterface } from 'src/app/interface/grupo-elemento-interface';
+import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
 
 @Component({
   selector: 'app-trueque',
@@ -12,131 +10,50 @@ import { TruequeService } from 'src/app/servicios/trueque.service';
 })
 export class TruequeComponent  implements OnInit {
 
-  fotos: string[];
-  nextId: number| null = null;
-  nombreDelServicio: string = '';
-  descripcionDelServicio: string = '';
-  idCurrent:any;
-  parFenicia:any;
-  categorys:any;
+  FORM: FormGroup;
+  GRUPO_ELEMENTOS : DataGrupoElementos[] = []
+  CATEGORIAS : DataGrupoElementos[] = []
 
   constructor(
-    private fotosService: FotosService,
-    private truequeService:TruequeService,
-    private authService:AuthService,
-    private loadingController:LoadingController,
-    private feniciaWsService:FeniciaWsService
+    private fb: FormBuilder,
+    private truequeSrv: TruequeService,
   ) { 
-    this.fotos = this.fotosService.fotos;
-    this.authService.generateToken();
+    this.FORM = this.createForm();
   }
 
   ngOnInit() {
-    console.log('OnInit');
-
-	  this._getCategory();
+    this.getCategoria();
   }
 
-  private async _getCategory(){
+  getCategoria() {
+    this.truequeSrv.getGrupoElementos()
+    .subscribe( (res : GrupoElementoInterface) => {
+      this.GRUPO_ELEMENTOS = res.data ;
+      this.CATEGORIAS = res.data ;
 
-		var tokenGenerated = await this.authService.generateToken();
+      this.CATEGORIAS.forEach(category => category.SELECTED = false);
 
-		await this.truequeService.getTrueque().subscribe(
-			response => {
-				
-				if( response.success ){
+    })
+  }
 
-					this.categorys = response.data;
-				}
-			},
-			error => {
-			  console.error(error);
-			  alert('ocurrio un error inesperado');
-			}
-		);
-	}
-
-  _sendFotos(){
-    debugger;
-    this.fotos.map((f)=>{
-
+  private createForm(){
+    return this.fb.group({
+      nombre_servicio           : [ '' ],
+      descripcion_servicio      : [ '' ],
+      categoria                 : [ ''],
     });
   }
 
-  async tomarFoto () {
-    await this.fotosService.agregarFoto();
+  
+  selectCategoryPrincipal($event:any):void{
+    var selectedCategory = $event.detail.value; // Aquí obtienes el valor de la categoría seleccionada
+    
+    if(selectedCategory){
+      let GRUPO_ELEMENTOS_CURRENT = selectedCategory.COD_NIVEL;
+      this.CATEGORIAS = this.GRUPO_ELEMENTOS;
+
+      this.CATEGORIAS = this.CATEGORIAS.filter(category => category.COD_NIVEL !== GRUPO_ELEMENTOS_CURRENT);
+    }
   }
-
-  async enviarFormulario() {
-
-    var tokenGenerated = await this.authService.generateToken();
-    this.presentLoading();
-    this.createDataTruque();
-  }
-
-  createDataTruque(){
-
-    this.truequeService.getNextId().subscribe(
-      (respuesta) => {
-
-        this.idCurrent = respuesta.data[0][""];
-        this.idCurrent = this.idCurrent.toString().padStart(7, '0');
-        this.authService.generateToken();
-        
-        this.truequeService.getPar().subscribe(
-          (respuesta) => {
-            const parData = respuesta.data[0];
-
-            this.parFenicia = parData;
-
-            var productData = new URLSearchParams();
-            productData.append("codigo", parData.A29_PRE+this.idCurrent);
-            productData.append("unidad", "U");
-            productData.append("nombre", this.nombreDelServicio);
-            productData.append("usuario", "FE-0000001");
-            productData.append("descripcion", this.descripcionDelServicio);
-            productData.append("agrextra", "224");
-
-            this.authService.generateToken();
-
-            this.truequeService.createProduct(productData).subscribe(
-              (respuesta) => {
-                console.log(respuesta);
-                
-                if(respuesta.success){
-                  this._sendFotos();
-                }
-                else{
-                  alert(respuesta.message);
-                }
-              },
-              (error) => {
-                console.error(error);
-              }
-            );
-          },
-          (error) => {
-            console.error(error);
-          }
-        );
-
-        this.loadingController.dismiss();
-      },
-      (error) => {
-        console.error(error);
-
-        this.loadingController.dismiss();
-      }
-    );
-  }
-
-  async presentLoading() {
-    const loading = await this.loadingController.create({
-      message: 'Cargando...',
-      duration: 3000
-    });
-
-    await loading.present();
-  } 
 
 }

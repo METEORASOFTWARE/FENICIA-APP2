@@ -10,11 +10,13 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { HomeComponent } from './pages/home/home.component';
 import { RegistroComponent } from './pages/registro/registro.component';
 import { ComunidadComponent } from './pages/comunidad/comunidad.component';
-import { FeniciaWsService } from './servicios/fenicia-ws.service';
-import { TruequeComponent } from './pages/trueque/trueque.component';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BtruequeComponent } from './pages/btrueque/btrueque.component';
+import { TokenInterceptor } from './interceptor/token.interceptor';
+import { ModalDetalleGrupoElementoComponent } from './pages/btrueque/modal-detalle-grupo-elemento/modal-detalle-grupo-elemento.component';
+import { TruequeComponent } from './pages/trueque/trueque.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { BtruequeComponent } from './pages/btrueque/btrueque.component';
     RegistroComponent,
     ComunidadComponent,
     TruequeComponent,
-    BtruequeComponent
+    BtruequeComponent,
+    ModalDetalleGrupoElementoComponent
   ],
   imports: [
     BrowserModule, 
@@ -37,14 +40,18 @@ import { BtruequeComponent } from './pages/btrueque/btrueque.component';
       registrationStrategy: 'registerWhenStable:30000'
     }),
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     { 
       provide: RouteReuseStrategy, 
       useClass: IonicRouteStrategy,
     },
-    FeniciaWsService
+    { 
+      provide: HTTP_INTERCEPTORS, 
+      useClass: TokenInterceptor, multi: true 
+    },
   ],
   bootstrap: [AppComponent],
 })

@@ -8,29 +8,36 @@
 </ion-header>
 
 <ion-content>
-  <ion-item>
-    <ion-label position="stacked">NOMBRE DEL SERVICIO</ion-label>
-    <ion-input class="ion-text-wrap" placeholder="Nombre" [(ngModel)]="nombreDelServicio"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="stacked">PRODUCTO O SERVICIO OFRECIDO</ion-label>
-    <ion-input class="ion-text-wrap" placeholder="Descripción (puede incluir imágenes)" [(ngModel)]="descripcionDelServicio"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="stacked">Categorías</ion-label>
-    <ion-list>
-      <ion-item *ngFor="let category of categorys">
-        <ion-label>{{ category.DESC_NIVEL }}</ion-label>
-        <ion-checkbox slot="start"></ion-checkbox>
-      </ion-item>
-    </ion-list>
-  </ion-item>
+  <form [formGroup]="FORM">
 
-  <ion-img [src]="foto" *ngFor = "let foto of fotos"></ion-img>
-  <ion-fab vertical="top" horizontal="end" slot="fixed">
-    <ion-fab-button size="small" (click)="tomarFoto()">
-      <ion-icon name="camera"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-  <ion-button  (click)="enviarFormulario()" size="small">ENVIAR</ion-button>
+    <ion-item>
+      <ion-label position="stacked">NOMBRE DEL SERVICIO</ion-label>
+      <ion-input class="ion-text-wrap" placeholder="Nombre" formControlName="nombre_servicio"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">PRODUCTO O SERVICIO OFRECIDO</ion-label>
+      <ion-input class="ion-text-wrap" placeholder="Descripción (puede incluir imágenes)" formControlName="descripcion_servicio"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Categoría Principal</ion-label>
+      <ion-select placeholder="Selecciona una categoría" (ionChange)="selectCategoryPrincipal($event)">
+        <ion-select-option *ngFor="let categoryMajor of GRUPO_ELEMENTOS">
+          {{ categoryMajor.DESC_NIVEL }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Categorías Secundarias</ion-label>
+      <ion-list>
+        <ion-item *ngFor="let category of CATEGORIAS">
+          <ion-label>{{ category.DESC_NIVEL }}</ion-label>
+          <ion-checkbox slot="start" [(ngModel)]="category.SELECTED"></ion-checkbox>
+        </ion-item>
+      </ion-list>
+    </ion-item>
+
+  </form>
 </ion-content>

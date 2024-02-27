@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/servicios/auth.service';
-import { FeniciaWsService } from 'src/app/servicios/fenicia-ws.service';
-import { TruequeService } from 'src/app/servicios/trueque.service';
+import { ModalController } from '@ionic/angular';
+import { DataGrupoElementos, GrupoElementoInterface } from 'src/app/interface/grupo-elemento-interface';
+import { EnvService } from 'src/app/servicios/env/env.service';
+import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
+import { ModalDetalleGrupoElementoComponent } from './modal-detalle-grupo-elemento/modal-detalle-grupo-elemento.component';
+
 
 @Component({
   selector: 'app-btrueque',
@@ -10,42 +13,33 @@ import { TruequeService } from 'src/app/servicios/trueque.service';
 })
 export class BtruequeComponent  implements OnInit {
 
-  tipos:any
-  token:any
+  GRUPO_ELEMENTOS : GrupoElementoInterface | null = null;
 
   constructor(
-    public tipo: FeniciaWsService, 
-    private truequeService:TruequeService,
-    private authService:AuthService) { }
+    private truequeSrv: TruequeService,
+    private modalCtrl: ModalController
+    
+	) { }
 
   ngOnInit() {
-    console.log('OnInit');
-
-    this._getTrueque();
+    this.truequeSrv.getGrupoElementos()
+    .subscribe((res: GrupoElementoInterface) => {
+      this.GRUPO_ELEMENTOS = res;
+    })
   }
 
-  private async _getTrueque(){
+  async show(id: number) {
 
-		var tokenGenerated = await this.authService.generateToken();
+    const modal = await this.modalCtrl.create({
+      component: ModalDetalleGrupoElementoComponent,
+      backdropDismiss: false,
+      componentProps: {
+        id
+      } 
+    });
 
-		await this.truequeService.getTrueque().subscribe(
-			response => {
-				
-				if( response.success ){
-
-					this.tipos = response.data;
-				}
-				else{
-
-					alert( 'la Api envío errores' );
-				}
-			},
-			error => {
-			  console.error(error);
-			  alert('ocurrio un error inesperado');
-			}
-		  );
-		// this.tipos=data;
-	}
+    modal.present();
+  }
+  
 
 }
