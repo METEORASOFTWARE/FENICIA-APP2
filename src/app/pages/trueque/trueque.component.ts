@@ -6,6 +6,9 @@ import { FotosService } from 'src/app/servicios/fotos.service';
 import { MensajesService } from 'src/app/servicios/mensajes/mensajes.service';
 import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
 
+import { Device } from '@capacitor/device';
+
+
 @Component({
   selector: 'app-trueque',
   templateUrl: './trueque.component.html',
@@ -19,6 +22,7 @@ export class TruequeComponent  implements OnInit {
   SUB_CATEGORIAS : DataGrupoElementos[] = []
   fotos: string[] = [];
   isAlertOpen = false;
+  DATA_DEVICE = { info : { model: null, osVersion: null, platform: null}, id : { identifier : null }};
 
   public categoriasActions = [
     {
@@ -88,6 +92,17 @@ export class TruequeComponent  implements OnInit {
     private smsSrv: MensajesService
   ) { 
     this.FORM = this.createForm();
+
+    const logDeviceInfo = async () => {
+      const info = await Device.getInfo();
+      const id = await Device.getId();
+      const data = { info, id}
+      return data;
+    };
+    logDeviceInfo().then( (res: any) => {
+      this.DATA_DEVICE = res;
+      console.log(this.DATA_DEVICE);
+    })
   }
 
   ngOnInit() {
