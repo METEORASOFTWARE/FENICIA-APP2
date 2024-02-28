@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { DataGrupoElementos, GrupoElementoInterface } from 'src/app/interface/grupo-elemento-interface';
-import { EnvService } from 'src/app/servicios/env/env.service';
 import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
 import { ModalDetalleGrupoElementoComponent } from './modal-detalle-grupo-elemento/modal-detalle-grupo-elemento.component';
-
 
 @Component({
   selector: 'app-btrueque',

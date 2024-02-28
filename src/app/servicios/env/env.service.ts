@@ -21,18 +21,18 @@ export class EnvService {
 
   public postQuery<T>(query: string, form: any) {
     query = apiUlr + query;
-    return this.http.post<T>(query, form).pipe(map((data: any) => data.data));
+    return this.http.post<T>(query, form).pipe(map((data: any) => data));
   }  
 
   public putQuery<T>(query: string, form: any) {
 
     query = apiUlr + query;
-    return this.http.put<T>(query, form).pipe(map((data: any) => data.data));
+    return this.http.put<T>(query, form).pipe(map((data: any) => data));
   }
 
   public deleteQuery<T>(query: string) {
 
     query = apiUlr + query;
-    return this.http.delete<T>(query).pipe(map((data: any) => data.data));
+    return this.http.delete<T>(query).pipe(map((data: any) => data));
   }  
 }
