@@ -4,40 +4,196 @@
           <ion-menu-button></ion-menu-button>
       </ion-buttons>
       <ion-title>OFERTA DE TRUEQUE</ion-title>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
+  <ion-row>
+    <ion-col size="12" class="ion-padding-start ion-padding-end">
+      <ng-container *ngIf="DATA_DEVICE">
+        {{ DATA_DEVICE.id.identifier }}
+      </ng-container>      
+    </ion-col>
+
+    <ion-col size="12" class="ion-padding-start ion-padding-end">
+      <ng-container *ngIf="DATA_DEVICE">
+        {{ DATA_DEVICE.info.model }} / {{ DATA_DEVICE.info.osVersion }} / {{ DATA_DEVICE.info.platform }}
+      </ng-container>      
+    </ion-col>    
+
+  </ion-row>
+
   <form [formGroup]="FORM">
 
-    <ion-item>
-      <ion-label position="stacked">NOMBRE DEL SERVICIO</ion-label>
-      <ion-input class="ion-text-wrap" placeholder="Nombre" formControlName="nombre_servicio"></ion-input>
+    <ion-item lines="none" class="ion-padding-start ion-padding-top ion-padding-end">
+      <ion-input 
+        label="NOMBRE DEL SERVICIO *" 
+        [counter]="true"
+        maxlength="100"
+        formControlName="nombre_servicio"
+        labelPlacement="stacked" 
+        placeholder="Máximo 100 caracteres..."></ion-input>
+    </ion-item>
+    
+    <ion-item lines="none" class="ion-padding-start ion-padding-end">
+      <ion-textarea 
+        label="PRODUCTO O SERVICIO OFRECIDO *" 
+        labelPlacement="stacked" 
+        [counter]="true" 
+        maxlength="256" 
+        formControlName="descripcion_servicio"
+        placeholder="Máximo 256 caracteres...">
+      </ion-textarea>
     </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">PRODUCTO O SERVICIO OFRECIDO</ion-label>
-      <ion-input class="ion-text-wrap" placeholder="Descripción (puede incluir imágenes)" formControlName="descripcion_servicio"></ion-input>
-    </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">Categoría Principal</ion-label>
-      <ion-select placeholder="Selecciona una categoría" (ionChange)="selectCategoryPrincipal($event)">
-        <ion-select-option *ngFor="let categoryMajor of GRUPO_ELEMENTOS">
-          {{ categoryMajor.DESC_NIVEL }}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">Categorías Secundarias</ion-label>
-      <ion-list>
-        <ion-item *ngFor="let category of CATEGORIAS">
-          <ion-label>{{ category.DESC_NIVEL }}</ion-label>
-          <ion-checkbox slot="start" [(ngModel)]="category.SELECTED"></ion-checkbox>
-        </ion-item>
-      </ion-list>
-    </ion-item>
+    <ion-row>
+      <ion-col size="10">
+
+        <ng-container *ngIf="this.FORM.get('nueva_categoria')?.value; else sihaycategoria">
+          <ion-item>
+            <ion-input label="Nueva Categoria" labelPlacement="stacked" formControlName="nueva_categoria"></ion-input>
+          </ion-item>
+
+        </ng-container>
+
+        <ng-template #sihaycategoria>
+          
+          <ion-item class="ion-padding-start ion-padding-end">
+            <ion-select label="CATEGORÍA" label-placement="stacked" placeholder="--- seleccione ---" formControlName="categoria" (ionChange)="selectCategoryPrincipal($event)">
+              <ion-select-option *ngFor="let item of CATEGORIAS" [value]="item.COD_NIVEL">
+                {{ item.DESC_NIVEL }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+        </ng-template>
+
+
+      </ion-col>
+      <ion-col size="2">
+
+        <ion-toolbar>
+
+          <ion-buttons slot="secondary">
+            <ion-button id="open-categorias-sheet">
+              <ion-icon slot="icon-only" name="chevron-down-circle"></ion-icon>
+            </ion-button>
+
+            <ion-action-sheet trigger="open-categorias-sheet" header="Nueva Categoria" [buttons]="categoriasActions"></ion-action-sheet>
+
+          </ion-buttons>
+
+        </ion-toolbar>
+        
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-padding-top">
+      <ion-col size="10">
+
+        <ng-container *ngIf="this.FORM.get('nueva_subcategoria')?.value; else sihaysubcategoria">
+          <ion-item>
+            <ion-input label="Nueva SubCategoria" labelPlacement="stacked" formControlName="nueva_subcategoria"></ion-input>
+          </ion-item>
+
+        </ng-container>
+
+        <ng-template #sihaysubcategoria>
+
+          <ion-item class="ion-padding-start ion-padding-end">
+            <ion-select label="CATEGORÍAS SECUNDARIAS" label-placement="stacked" formControlName="subcategoria" placeholder="--- seleccione ---">
+              <ion-select-option *ngFor="let item of SUB_CATEGORIAS" [value]="item.COD_NIVEL">
+                {{ item.DESC_NIVEL }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          
+        </ng-template>
+
+
+      </ion-col>
+
+      <ion-col size="2">
+
+        <ion-toolbar>
+
+          <ion-buttons slot="secondary">
+            <ion-button id="open-subcategorias-sheet">
+              <ion-icon slot="icon-only" name="chevron-down-circle"></ion-icon>
+            </ion-button>
+
+            <ion-action-sheet trigger="open-subcategorias-sheet" header="Nueva SubCategoria" [buttons]="subCategoriasActions"></ion-action-sheet>
+          </ion-buttons>
+
+        </ion-toolbar>
+        
+      </ion-col>
+
+    </ion-row>
+
+
+    <ion-grid fixed class="ion-padding">
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-text color="primary" class="ion-text-center ion-align-items-center">
+            <ion-icon name="image" size="large"></ion-icon>
+            <span class="ion-padding-start">Imágenes del Servicio</span>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row>
+        <ion-col size="12">
+
+          <ng-container *ngIf="!fotos.length; else sihayfotos">
+            <ion-card>
+              <ion-img src="assets/images/no-image.svg"></ion-img>
+            </ion-card>
+
+          </ng-container>
+
+          <ng-template #sihayfotos>
+
+            <swiper-container slides-per-view="1" css-mode="true">
+  
+              <swiper-slide *ngFor = "let foto of fotos">
+                <ion-card>
+                  <ion-img [src]="foto"></ion-img>
+                </ion-card>
+              </swiper-slide>
+  
+            </swiper-container>    
+
+          </ng-template>
+
+
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
   </form>
 </ion-content>
+
+<ion-footer [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+
+    <ion-buttons slot="start" class="ion-padding-start">
+      <ion-button color="primary" fill="solid" (click)="save()"  [disabled]="FORM.invalid">
+        CREAR
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="tomarFoto()">
+        <ion-icon slot="icon-only" name="camera"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    
+  </ion-toolbar>
+</ion-footer>
