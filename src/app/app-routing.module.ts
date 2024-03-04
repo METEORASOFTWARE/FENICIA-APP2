@@ -6,6 +6,9 @@ import { ComunidadComponent } from './pages/comunidad/comunidad.component';
 
 import { BtruequeComponent } from './pages/btrueque/btrueque.component';
 import { TruequeComponent } from './pages/trueque/trueque.component';
+// am
+import { MisofertasComponent } from './pages/misofertas/misofertas.component';
+
 
 const routes: Routes = [
   {
