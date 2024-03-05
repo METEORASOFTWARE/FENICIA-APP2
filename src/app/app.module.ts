@@ -17,9 +17,11 @@ import { BtruequeComponent } from './pages/btrueque/btrueque.component';
 import { TokenInterceptor } from './interceptor/token.interceptor';
 import { ModalDetalleGrupoElementoComponent } from './pages/btrueque/modal-detalle-grupo-elemento/modal-detalle-grupo-elemento.component';
 import { TruequeComponent } from './pages/trueque/trueque.component';
+
+import { ErrorInterceptor } from './interceptor/error.interceptor';
 // am
 import { MisofertasComponent } from './pages/misofertas/misofertas.component';
-import { ErrorInterceptor } from './interceptor/error.interceptor';
+import { PropuestaComponent } from './pages/propuesta/propuesta.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { ErrorInterceptor } from './interceptor/error.interceptor';
     TruequeComponent,
     BtruequeComponent,
     ModalDetalleGrupoElementoComponent,
-    MisofertasComponent
+    MisofertasComponent,
+    PropuestaComponent
   ],
   imports: [
     BrowserModule, 
