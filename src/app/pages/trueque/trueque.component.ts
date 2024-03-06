@@ -137,6 +137,7 @@ export class TruequeComponent  implements OnInit {
 
 
   save() {
+
     this.smsSrv.openLoading();
 
     this.truequeSrv.getNextId()
@@ -182,7 +183,12 @@ export class TruequeComponent  implements OnInit {
       data.append('codigo', id.toString());
       data.append('consecutivo', m.toString());
       data.append('imagen', f.toString());
-      this.truequeSrv.postStoreImage(data).subscribe();
+      this.truequeSrv.postStoreImage(data)
+      .subscribe( (res: any) => {
+        console.log(res)
+      },
+      (error) => { alert(error)}
+      );
       m++;
     });
 
@@ -296,6 +302,13 @@ export class TruequeComponent  implements OnInit {
 
     modal.present();
 
+  }
+
+
+  eliminarFoto(index: number): void {
+    if (index >= 0 && index < this.fotos.length) {
+      this.fotos.splice(index, 1);
+    }
   }
 
 }

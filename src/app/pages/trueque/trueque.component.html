@@ -118,6 +118,10 @@
               <swiper-slide *ngFor = "let foto of fotos; let i = index">
                 <ion-img [src]="foto" style="height: 100%; width: 100%; object-fit: cover;"></ion-img>
 
+
+                <ion-icon name="trash" (click)="eliminarFoto(i)" class="icono-borrar"></ion-icon>
+
+
                 <div class="imagen-counter">{{ i + 1 }} / {{ fotos.length }}</div>
 
               </swiper-slide>
