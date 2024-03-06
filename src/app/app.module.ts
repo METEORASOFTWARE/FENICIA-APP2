@@ -22,6 +22,7 @@ import { ErrorInterceptor } from './interceptor/error.interceptor';
 // am
 import { MisofertasComponent } from './pages/misofertas/misofertas.component';
 import { PropuestaComponent } from './pages/propuesta/propuesta.component';
+import { ModalSubcategoriaComponent } from './pages/trueque/modal-subcategoria/modal-subcategoria.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,9 @@ import { PropuestaComponent } from './pages/propuesta/propuesta.component';
     BtruequeComponent,
     ModalDetalleGrupoElementoComponent,
     MisofertasComponent,
-    PropuestaComponent
+    PropuestaComponent,
+    ModalSubcategoriaComponent
+  
   ],
   imports: [
     BrowserModule, 

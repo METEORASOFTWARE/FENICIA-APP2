@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertController } from '@ionic/angular';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertController, ModalController } from '@ionic/angular';
 import { DataGrupoElementos, GrupoElementoInterface } from 'src/app/interface/grupo-elemento-interface';
 import { FotosService } from 'src/app/servicios/fotos.service';
 import { MensajesService } from 'src/app/servicios/mensajes/mensajes.service';
 import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
 
 import { Device } from '@capacitor/device';
+import { ModalSubcategoriaComponent } from './modal-subcategoria/modal-subcategoria.component';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class TruequeComponent  implements OnInit {
   fotos: string[] = [];
   isAlertOpen = false;
   DATA_DEVICE = { info : { model: null, osVersion: null, platform: null}, id : { identifier : null }};
+  SELECT_SUB: number = 0
 
   public categoriasActions = [
     {
@@ -89,7 +91,8 @@ export class TruequeComponent  implements OnInit {
     private truequeSrv: TruequeService,
     private fotosService: FotosService,
     private alertController: AlertController,
-    private smsSrv: MensajesService
+    private smsSrv: MensajesService,
+    private modalCtrl: ModalController
   ) { 
     this.FORM = this.createForm();
 
@@ -121,7 +124,7 @@ export class TruequeComponent  implements OnInit {
       nombre_servicio           : [ '' , [ Validators.required, Validators.maxLength(100) ] ],
       descripcion_servicio      : [ '' , [ Validators.required, Validators.maxLength(256) ] ],
       categoria                 : [ '' , [ Validators.required ] ],
-      subcategoria              : [ '' ],
+      subcategorias              : this.fb.array([]),
       nueva_categoria           : [ '' ],
       nueva_subcategoria        : [ '' ],
     });
@@ -273,7 +276,26 @@ export class TruequeComponent  implements OnInit {
     this.fotos = [];
   }
 
+  async openModalSubcategoria() {
+    const modal = await this.modalCtrl.create({
+      component: ModalSubcategoriaComponent,
+      backdropDismiss: false,
+      componentProps: {
+        SUBCATEGORIAS: this.SUB_CATEGORIAS,
+        form : this.FORM
+      } 
+    });
 
+    modal.onDidDismiss().then( (data: any) => {
 
+      const subcategorias = this.FORM.get('subcategorias') as FormArray;
+      const subcategoriasSeleccionadas = subcategorias.controls.filter(control => control.value.SEL_NIVEL);
+      this.SELECT_SUB = subcategoriasSeleccionadas.length;
+
+    });
+
+    modal.present();
+
+  }
 
 }

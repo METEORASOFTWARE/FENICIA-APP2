@@ -10,7 +10,7 @@
 
 <ion-content>
 
-  <ion-row>
+  <!-- <ion-row>
     <ion-col size="12" class="ion-padding-start ion-padding-end">
       <ng-container *ngIf="DATA_DEVICE">
         {{ DATA_DEVICE.id.identifier }}
@@ -23,7 +23,7 @@
       </ng-container>      
     </ion-col>    
 
-  </ion-row>
+  </ion-row> -->
 
   <form [formGroup]="FORM">
 
@@ -80,7 +80,7 @@
 
           <ion-buttons slot="secondary">
             <ion-button id="open-categorias-sheet">
-              <ion-icon slot="icon-only" name="chevron-down-circle"></ion-icon>
+              <ion-icon slot="icon-only" name="settings"></ion-icon>
             </ion-button>
 
             <ion-action-sheet trigger="open-categorias-sheet" header="Nueva Categoria" [buttons]="categoriasActions"></ion-action-sheet>
@@ -91,50 +91,6 @@
         
       </ion-col>
     </ion-row>
-
-    <ion-row class="ion-padding-top">
-      <ion-col size="10">
-
-        <ng-container *ngIf="this.FORM.get('nueva_subcategoria')?.value; else sihaysubcategoria">
-          <ion-item>
-            <ion-input label="Nueva SubCategoria" labelPlacement="stacked" formControlName="nueva_subcategoria"></ion-input>
-          </ion-item>
-
-        </ng-container>
-
-        <ng-template #sihaysubcategoria>
-
-          <ion-item class="ion-padding-start ion-padding-end">
-            <ion-select label="CATEGORÍAS SECUNDARIAS" label-placement="stacked" formControlName="subcategoria" placeholder="--- seleccione ---">
-              <ion-select-option *ngFor="let item of SUB_CATEGORIAS" [value]="item.COD_NIVEL">
-                {{ item.DESC_NIVEL }}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
-          
-        </ng-template>
-
-
-      </ion-col>
-
-      <ion-col size="2">
-
-        <ion-toolbar>
-
-          <ion-buttons slot="secondary">
-            <ion-button id="open-subcategorias-sheet">
-              <ion-icon slot="icon-only" name="chevron-down-circle"></ion-icon>
-            </ion-button>
-
-            <ion-action-sheet trigger="open-subcategorias-sheet" header="Nueva SubCategoria" [buttons]="subCategoriasActions"></ion-action-sheet>
-          </ion-buttons>
-
-        </ion-toolbar>
-        
-      </ion-col>
-
-    </ion-row>
-
 
     <ion-grid fixed class="ion-padding">
 
@@ -152,20 +108,18 @@
         <ion-col size="12">
 
           <ng-container *ngIf="!fotos.length; else sihayfotos">
-            <ion-card>
-              <ion-img src="assets/images/no-image.svg"></ion-img>
-            </ion-card>
-
+            <ion-img src="assets/images/no-image.svg" style="height: 200px;"></ion-img>
           </ng-container>
 
           <ng-template #sihayfotos>
 
             <swiper-container slides-per-view="1" css-mode="true">
   
-              <swiper-slide *ngFor = "let foto of fotos">
-                <ion-card>
-                  <ion-img [src]="foto"></ion-img>
-                </ion-card>
+              <swiper-slide *ngFor = "let foto of fotos; let i = index">
+                <ion-img [src]="foto" style="height: 100%; width: 100%; object-fit: cover;"></ion-img>
+
+                <div class="imagen-counter">{{ i + 1 }} / {{ fotos.length }}</div>
+
               </swiper-slide>
   
             </swiper-container>    
@@ -178,6 +132,7 @@
     </ion-grid>
 
   </form>
+
 </ion-content>
 
 <ion-footer [translucent]="true" class="ion-no-border">
@@ -190,6 +145,12 @@
     </ion-buttons>
 
     <ion-buttons slot="end">
+
+      <ion-button (click)="openModalSubcategoria()" [disabled]="!FORM.get('categoria')?.value">
+        <ion-icon name="folder"></ion-icon>
+        <ion-badge slot="end" color="warning">{{SELECT_SUB}}</ion-badge>
+      </ion-button>
+
       <ion-button (click)="tomarFoto()">
         <ion-icon slot="icon-only" name="camera"></ion-icon>
       </ion-button>
