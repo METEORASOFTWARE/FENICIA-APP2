@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, ModalController, Platform } from '@ionic/angular';
 import { DataGrupoElementos, GrupoElementoInterface } from 'src/app/interface/grupo-elemento-interface';
 import { FotosService } from 'src/app/servicios/fotos.service';
 import { MensajesService } from 'src/app/servicios/mensajes/mensajes.service';
@@ -8,6 +8,7 @@ import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
 
 import { Device } from '@capacitor/device';
 import { ModalSubcategoriaComponent } from './modal-subcategoria/modal-subcategoria.component';
+import { Toast } from '@capacitor/toast';
 
 
 @Component({
@@ -92,7 +93,8 @@ export class TruequeComponent  implements OnInit {
     private fotosService: FotosService,
     private alertController: AlertController,
     private smsSrv: MensajesService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private platform: Platform
   ) { 
     this.FORM = this.createForm();
 
@@ -110,7 +112,9 @@ export class TruequeComponent  implements OnInit {
 
   ngOnInit() {
     this.getCategoria();
+
   }
+
 
   getCategoria() {
     this.truequeSrv.getGrupoElementos()

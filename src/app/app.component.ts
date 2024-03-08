@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TokenService } from './servicios/token/token.service';
 import { register } from 'swiper/element/bundle';
 
@@ -9,10 +9,15 @@ register();
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   constructor(
-    private tokenSrv: TokenService
+    private tokenSrv: TokenService,
+
   ) {
+    
+  }
+
+  ngOnInit() {
     
   }
 }

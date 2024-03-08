@@ -24,6 +24,12 @@ import { MisofertasComponent } from './pages/misofertas/misofertas.component';
 import { PropuestaComponent } from './pages/propuesta/propuesta.component';
 import { ModalSubcategoriaComponent } from './pages/trueque/modal-subcategoria/modal-subcategoria.component';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { environment } from 'src/environments/environment';
+
+const config: SocketIoConfig = { url: environment.wsUrl, options: {} };
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +57,8 @@ import { ModalSubcategoriaComponent } from './pages/trueque/modal-subcategoria/m
     }),
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [
     { 

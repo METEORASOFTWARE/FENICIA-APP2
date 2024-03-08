@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { EnvService } from '../env/env.service';
 import { environment } from 'src/environments/environment';
 import { GrupoElementoInterface } from '../../interface/grupo-elemento-interface';
+import { WebsocketService } from '../websocket/websocket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { GrupoElementoInterface } from '../../interface/grupo-elemento-interface
 export class TruequeService {
 
   constructor(
-    private envSrv : EnvService
+    private envSrv : EnvService,
   ) { }
 
   public getGrupoElementos() {
@@ -35,7 +36,5 @@ export class TruequeService {
   public postStoreImage(data:any) {
     return this.envSrv.postQuery(`ImageProductController.php`, data)
   }
-
-
 
 }

@@ -11,7 +11,8 @@ export const environment = {
     password : `gmt;g2F4$(k;E}w`,
     grant_type : `password`,
     client_id : `meteora_ws`
-  }
+  },
+  wsUrl: `http://fenicia.meteoracolombia.co:5000`,
 };
 
 /*
