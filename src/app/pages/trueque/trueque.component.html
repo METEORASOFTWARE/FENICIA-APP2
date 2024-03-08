@@ -3,14 +3,14 @@
       <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
       </ion-buttons>
-      <ion-title>OFERTA DE TRUEQUE</ion-title>
+      <ion-title>NUEVA OFERTA</ion-title>
 
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <!-- <ion-row>
+  <ion-row>
     <ion-col size="12" class="ion-padding-start ion-padding-end">
       <ng-container *ngIf="DATA_DEVICE">
         {{ DATA_DEVICE.id.identifier }}
@@ -23,7 +23,7 @@
       </ng-container>      
     </ion-col>    
 
-  </ion-row> -->
+  </ion-row>
 
   <form [formGroup]="FORM">
 
@@ -51,7 +51,7 @@
 
 
     <ion-row>
-      <ion-col size="10">
+      <ion-col size="8">
 
         <ng-container *ngIf="this.FORM.get('nueva_categoria')?.value; else sihaycategoria">
           <ion-item>
@@ -74,11 +74,17 @@
 
 
       </ion-col>
-      <ion-col size="2">
+      <ion-col size="4">
 
         <ion-toolbar>
 
           <ion-buttons slot="secondary">
+
+            <ion-button (click)="openModalSubcategoria()" [disabled]="!FORM.get('categoria')?.value">
+              <ion-icon size="large" name="folder" ></ion-icon>
+              <ion-badge slot="end" color="warning">{{SELECT_SUB}}</ion-badge>
+            </ion-button>
+
             <ion-button id="open-categorias-sheet">
               <ion-icon slot="icon-only" name="settings"></ion-icon>
             </ion-button>
@@ -149,11 +155,6 @@
     </ion-buttons>
 
     <ion-buttons slot="end">
-
-      <ion-button (click)="openModalSubcategoria()" [disabled]="!FORM.get('categoria')?.value">
-        <ion-icon name="folder"></ion-icon>
-        <ion-badge slot="end" color="warning">{{SELECT_SUB}}</ion-badge>
-      </ion-button>
 
       <ion-button (click)="tomarFoto()">
         <ion-icon slot="icon-only" name="camera"></ion-icon>

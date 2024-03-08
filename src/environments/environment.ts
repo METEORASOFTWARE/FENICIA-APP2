@@ -13,6 +13,7 @@ export const environment = {
     client_id : `meteora_ws`
   },
   wsUrl: `http://fenicia.meteoracolombia.co:5000`,
+  versionFenicia:  `2.03.248`
 };
 
 /*
