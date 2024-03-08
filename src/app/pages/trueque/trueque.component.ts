@@ -6,9 +6,7 @@ import { FotosService } from 'src/app/servicios/fotos.service';
 import { MensajesService } from 'src/app/servicios/mensajes/mensajes.service';
 import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
 
-import { Device } from '@capacitor/device';
 import { ModalSubcategoriaComponent } from './modal-subcategoria/modal-subcategoria.component';
-import { Toast } from '@capacitor/toast';
 
 
 @Component({
@@ -94,20 +92,9 @@ export class TruequeComponent  implements OnInit {
     private alertController: AlertController,
     private smsSrv: MensajesService,
     private modalCtrl: ModalController,
-    private platform: Platform
+  
   ) { 
     this.FORM = this.createForm();
-
-    const logDeviceInfo = async () => {
-      const info = await Device.getInfo();
-      const id = await Device.getId();
-      const data = { info, id}
-      return data;
-    };
-    logDeviceInfo().then( (res: any) => {
-      this.DATA_DEVICE = res;
-      console.log(this.DATA_DEVICE);
-    })
   }
 
   ngOnInit() {

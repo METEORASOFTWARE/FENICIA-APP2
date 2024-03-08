@@ -42,9 +42,13 @@
                 </ion-col>
   
                 <ion-col size="12">
-                  <ion-label>
-                    <b>Nivel:</b>: {{item.DESC_NIVEL}}
-                  </ion-label>
+                  <ng-container *ngIf="item.SW_INACTIVO == '1'; else inactivo">
+                    <ion-chip color="success">ACTIVO</ion-chip>
+                  </ng-container>
+
+                  <ng-template #inactivo>
+                    <ion-chip color="danger">INACTIVO</ion-chip>
+                  </ng-template>
                 </ion-col>
               </ion-row>
   
