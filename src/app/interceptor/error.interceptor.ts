@@ -8,13 +8,17 @@ import {
 } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { TokenService } from '../servicios/token/token.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
   constructor(
-    private router: Router
-  ) {}
+    private router: Router,
+    private tokenSrv: TokenService,
+  ) {
+    
+  }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request)
@@ -22,6 +26,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if ( error.status === 401 ) {
           console.log('401 Unauthorized')
+          this.tokenSrv.generateToken()
         }
         return throwError(error)
       })

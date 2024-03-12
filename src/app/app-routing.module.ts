@@ -44,6 +44,7 @@ const routes: Routes = [
     path: 'propuesta',
     component: PropuestaComponent
   },
+  { path: '**', component: HomeComponent },
 ];
 
 @NgModule({

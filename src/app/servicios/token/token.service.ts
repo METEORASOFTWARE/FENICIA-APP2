@@ -15,10 +15,10 @@ export class TokenService {
     private envSrv: EnvtokenService,
     private http: HttpClient,
   ) { 
-    this.generateToken();
+    
   }
 
-  private generateToken() {
+  public generateToken() {
 
     const data = new URLSearchParams();
 		data.set('username', environment.token.username);
