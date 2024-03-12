@@ -42,7 +42,7 @@ const config: SocketIoConfig = { url: environment.wsUrl, options: {} };
     ModalDetalleGrupoElementoComponent,
     MisofertasComponent,
     PropuestaComponent,
-    ModalSubcategoriaComponent
+    ModalSubcategoriaComponent,
   
   ],
   imports: [

@@ -1,6 +1,6 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Detalle</ion-title>
+    <ion-title>{{data.DESC_NIVEL}} :: DETALLE</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="hideModal()">Cerrar</ion-button>
     </ion-buttons>
@@ -9,44 +9,45 @@
 
 <ion-content>
 
-  <ng-container *ngIf="LOADING_DATOS; else sihayElementos">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
+  </ion-refresher>
 
-    <ion-card *ngFor="let item of [1,2,3,4,5]" class="ion-no-padding">
-      <ion-card-header class="ion-text-start">
-          <ion-card-subtitle>
-            <ion-skeleton-text [animated]="true" style="width: 100%; height: 25px;"></ion-skeleton-text>
-          </ion-card-subtitle>
-      </ion-card-header>
-    </ion-card>
-
+  <ng-container *ngIf="LOADING_DATOS; else responseAPI">
+    <app-loading></app-loading>
   </ng-container>
 
-  <ng-template #sihayElementos>
+  <ng-template #responseAPI>
 
-    <ion-card *ngIf="NO_DATOS.name; else conDatos" class="ion-no-padding">
-      <ion-card-header class="ion-text-start">
-          <ion-card-subtitle>
-            {{NO_DATOS.name}}
-          </ion-card-subtitle>
-      </ion-card-header>
-    </ion-card>
-
-    <ng-template #conDatos>
-      <ion-card *ngFor="let item of DETALLE_GRUPO_ELEMENTOS.data" class="ion-no-padding">
-        <ion-card-header class="ion-text-start">
-            <ion-card-title>{{item.COD_PRODUCTO}}</ion-card-title>
-
-            <ion-card-subtitle>
-              {{ item.NOM_PRODUCTO }}
-            </ion-card-subtitle>
-        </ion-card-header>
-
-        <ion-card-content> {{item.DESC_GONDOLA}} </ion-card-content>
-
-      </ion-card>
-    </ng-template>
+    <ng-container *ngIf="!datosResponse.success; else sihayDatos">
+      <ion-row class="ion-text-center">
+        <ion-col size="12">
+          <ion-chip  color="warning">{{datosResponse.name}}</ion-chip>
+        </ion-col>
+      </ion-row>
+    </ng-container>
 
   </ng-template>
+
+  <ng-template #sihayDatos>
+    <ion-list>
+      <ion-item *ngFor="let item of datosResponse.data; index as i;" (click)="viewImages(item)">
+
+        <ion-label>
+          <ion-text>{{ item.COD_PRODUCTO }}</ion-text><br />
+          <ion-note color="medium" class="ion-text-wrap">
+            {{ item.NOM_PRODUCTO }}
+          </ion-note>
+        </ion-label>
+
+        <div class="metadata-end-wrapper" slot="end">
+          <ion-icon color="medium" name="chevron-forward"></ion-icon>
+        </div>
+
+      </ion-item>
+    </ion-list>
+
+  </ng-template> 
 
 
 </ion-content>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, ModalController, Platform } from '@ionic/angular';
-import { DataGrupoElementos, GrupoElementoInterface } from 'src/app/interface/grupo-elemento-interface';
+import { GrupoElementoDTO, DataGrupoElementosDTO } from 'src/app/interface/grupo-elemento-interface';
 import { FotosService } from 'src/app/servicios/fotos.service';
 import { MensajesService } from 'src/app/servicios/mensajes/mensajes.service';
 import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
@@ -17,12 +17,11 @@ import { ModalSubcategoriaComponent } from './modal-subcategoria/modal-subcatego
 export class TruequeComponent  implements OnInit {
 
   FORM: FormGroup;
-  GRUPO_ELEMENTOS : DataGrupoElementos[] = []
-  CATEGORIAS : DataGrupoElementos[] = []
-  SUB_CATEGORIAS : DataGrupoElementos[] = []
+  
+  CATEGORIAS!: DataGrupoElementosDTO[] | undefined
+  SUB_CATEGORIAS! : DataGrupoElementosDTO[] | undefined
   fotos: string[] = [];
-  isAlertOpen = false;
-  DATA_DEVICE = { info : { model: null, osVersion: null, platform: null}, id : { identifier : null }};
+
   SELECT_SUB: number = 0
   INFO_USER: any = '';
 
@@ -108,7 +107,7 @@ export class TruequeComponent  implements OnInit {
 
   getCategoria() {
     this.truequeSrv.getGrupoElementos()
-    .subscribe( (res : GrupoElementoInterface) => {
+    .subscribe( (res : GrupoElementoDTO) => {
       this.CATEGORIAS = res.data ;
     })
   }
@@ -194,8 +193,7 @@ export class TruequeComponent  implements OnInit {
     if(selectedCategory){
       let GRUPO_ELEMENTOS_CURRENT = selectedCategory;
       this.SUB_CATEGORIAS = this.CATEGORIAS;
-
-      this.SUB_CATEGORIAS = this.SUB_CATEGORIAS.filter(category => category.COD_NIVEL !== GRUPO_ELEMENTOS_CURRENT);
+      this.SUB_CATEGORIAS = this.SUB_CATEGORIAS?.filter(category => category.COD_NIVEL !== GRUPO_ELEMENTOS_CURRENT);
     }
   }
 

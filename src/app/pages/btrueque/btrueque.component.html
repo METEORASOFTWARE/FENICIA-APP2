@@ -1,28 +1,44 @@
 <app-header [title]="'BÚSQUEDA DE OFERTAS'"></app-header>
 
 <ion-content>
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content refreshingSpinner="circles"></ion-refresher-content>
+  </ion-refresher>
   
-  <ng-container *ngIf="!GRUPO_ELEMENTOS?.data; else sihayElementos">
-
-    <ion-card *ngFor="let item of [1,2,3,4,5]" class="ion-no-padding">
-      <ion-card-header class="ion-text-start">
-          <ion-card-subtitle>
-            <ion-skeleton-text [animated]="true" style="width: 100%; height: 25px;"></ion-skeleton-text>
-          </ion-card-subtitle>
-      </ion-card-header>
-    </ion-card>
-
+  <ng-container *ngIf="LOADING_DATOS; else responseAPI">
+    <app-loading></app-loading>    
   </ng-container>
 
-  <ng-template #sihayElementos>
+  <ng-template #responseAPI>
 
-    <ion-card *ngFor="let item of GRUPO_ELEMENTOS?.data" class="ion-no-padding" (click)="show(item.COD_NIVEL)">
-      <ion-card-header class="ion-text-start">
-          <ion-card-subtitle>
-            {{ item.DESC_NIVEL }}
-          </ion-card-subtitle>
-      </ion-card-header>
-    </ion-card>
+    <ng-container *ngIf="!datosResponse.success; else sihayDatos">
+      <ion-row class="ion-text-center">
+        <ion-col size="12">
+          <ion-chip  color="warning">{{datosResponse.name}}</ion-chip>
+        </ion-col>
+      </ion-row>
+    </ng-container>
+
+  </ng-template>
+
+
+  <ng-template #sihayDatos>
+
+
+    <ion-list>
+      <ion-item *ngFor="let item of datosResponse.data; index as i;" (click)="show(item)">
+
+        <ion-label>
+          <ion-text>{{item.DESC_NIVEL}}</ion-text><br />
+        </ion-label>
+
+        <div class="metadata-end-wrapper" slot="end">
+          <ion-icon color="medium" name="chevron-forward"></ion-icon>
+        </div>
+
+      </ion-item>
+    </ion-list>
 
   </ng-template>
 

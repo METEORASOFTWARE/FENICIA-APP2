@@ -1,13 +1,11 @@
-export interface DetalleGrupoElementoInterface {
-    success?: boolean;
-    name?: string;
-    data?: DataDetalleGrupoElemento[];
-    code?: string;
+import { responseAPIDTO } from "./response-interface";
+
+export interface DetalleGrupoElementoDTO extends responseAPIDTO {
+    data?: DataDetalleGrupoElementoDTO[];
 }
 
-export interface DataDetalleGrupoElemento {
+export interface DataDetalleGrupoElementoDTO {
   COD_PRODUCTO?: string;
   NOM_PRODUCTO?: string;
   DESC_GONDOLA?: string;
-  URL?: string;
 }

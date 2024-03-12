@@ -1,8 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { DataDetalleGrupoElemento, DetalleGrupoElementoInterface } from 'src/app/interface/detalle-grupo-elemento-interface';
-import { NoDatos } from 'src/app/interface/no-datos';
+import { DataDetalleGrupoElementoDTO, DetalleGrupoElementoDTO } from 'src/app/interface/detalle-grupo-elemento-interface';
+import { DataGrupoElementosDTO } from 'src/app/interface/grupo-elemento-interface';
+import { MisOfertasListaDTO } from 'src/app/interface/misOfertas-interface';
+
+import { responseAPIDTO } from 'src/app/interface/response-interface';
 import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
+import { ImagesOfertasComponent } from '../../shared/images-ofertas/images-ofertas.component';
+
 
 @Component({
   selector: 'app-modal-detalle-grupo-elemento',
@@ -11,10 +16,12 @@ import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
 })
 export class ModalDetalleGrupoElementoComponent  implements OnInit {
 
-  DETALLE_GRUPO_ELEMENTOS : DetalleGrupoElementoInterface = {}; 
-  NO_DATOS : NoDatos = {}; 
+  // DETALLE_GRUPO_ELEMENTOS : DetalleGrupoElementoInterface = {}; 
+  // NO_DATOS : responseAPIDTO = {}; 
+
+  datosResponse!: DetalleGrupoElementoDTO;
   LOADING_DATOS: boolean = false;
-  @Input() id: number = 0;
+  @Input() data!: DataGrupoElementosDTO;
   
   constructor(
     public modalCtrl: ModalController,
@@ -22,26 +29,46 @@ export class ModalDetalleGrupoElementoComponent  implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getDetalleGrupoElementos(this.id);
+    this.getDetalleGrupoElementos(this.data.COD_NIVEL);
   }
 
   hideModal() {
     this.modalCtrl.dismiss();
   }
 
-  getDetalleGrupoElementos(id: number) {
+  getDetalleGrupoElementos(id: any, ev: any = null) {
     this.LOADING_DATOS = true;
 
     this.truequeSrv.getDetalleGrupoElementos(id)
-    .subscribe( (res: DetalleGrupoElementoInterface) => {
+    .subscribe( (res: DetalleGrupoElementoDTO) => {
       this.LOADING_DATOS = false;
-      this.DETALLE_GRUPO_ELEMENTOS = res;
-      console.log(this.DETALLE_GRUPO_ELEMENTOS)
+      this.datosResponse = res;
+      if (ev) ev.target.complete();
+      
     }, (error) => {
         this.LOADING_DATOS = false;
-        this.NO_DATOS = error?.error;
-        console.log( this.NO_DATOS)
+        this.datosResponse = error.error
+        if (ev) ev.target.complete();
     })
+  }
+
+  async viewImages( datos : DataDetalleGrupoElementoDTO) {
+    const data:MisOfertasListaDTO = {
+      COD_PRODUCTO :  datos.COD_PRODUCTO,
+      NOM_PRODUCTO: datos.NOM_PRODUCTO,
+      DESC_NIVEL: this.data.DESC_NIVEL
+    }
+
+    const modalImages = await this.modalCtrl.create({
+      component: ImagesOfertasComponent,
+      componentProps: { data },
+      backdropDismiss: false
+    });
+    modalImages.present();
+  }
+
+  handleRefresh(ev: any) {
+    this.getDetalleGrupoElementos(this.data.COD_NIVEL, ev);
   }
 
 }

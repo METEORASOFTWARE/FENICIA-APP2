@@ -1,14 +1,18 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicModule } from '@ionic/angular';
 import { HeaderComponent } from './header/header.component';
+import { LoadingComponent } from './loading/loading.component';
+import { ImagesOfertasComponent } from './images-ofertas/images-ofertas.component';
 
 
 
 @NgModule({
   declarations: [
-    HeaderComponent
+    HeaderComponent,
+    LoadingComponent,
+    ImagesOfertasComponent
   ],
   imports: [
     CommonModule,
@@ -16,7 +20,10 @@ import { HeaderComponent } from './header/header.component';
     IonicModule.forRoot(), 
   ],
   exports: [
-    HeaderComponent
-  ]
+    HeaderComponent,
+    LoadingComponent,
+    ImagesOfertasComponent
+  ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class SharedModule { }

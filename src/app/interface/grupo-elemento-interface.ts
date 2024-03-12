@@ -1,13 +1,11 @@
+import { responseAPIDTO } from "./response-interface";
 
-export interface GrupoElementoInterface {
-  success?: boolean;
-  name?: string;
-  data: DataGrupoElementos[];
-  code?: string;
+export interface GrupoElementoDTO extends responseAPIDTO {
+  data?: DataGrupoElementosDTO[];
 }
 
-export interface DataGrupoElementos {
-  DESC_NIVEL: string;
-  COD_NIVEL: number;
-  SELECTED : Boolean;
+export interface DataGrupoElementosDTO {
+  DESC_NIVEL?: string;
+  COD_NIVEL?: number;
+  SELECTED?: Boolean;
 }

@@ -14,4 +14,8 @@ export class OfertasService {
   public get(user : string) {
     return this.envSrv.getQuery(`MisElementosController.php?propietario=${user}`)
   }
+
+  public getImages(code : any) {
+    return this.envSrv.getQuery(`ImagenesPorElementoController.php?elemento=${code}`)
+  }
 }

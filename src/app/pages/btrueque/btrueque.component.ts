@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { DataGrupoElementos, GrupoElementoInterface } from 'src/app/interface/grupo-elemento-interface';
+import { DataGrupoElementosDTO, GrupoElementoDTO } from 'src/app/interface/grupo-elemento-interface';
 import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
 import { ModalDetalleGrupoElementoComponent } from './modal-detalle-grupo-elemento/modal-detalle-grupo-elemento.component';
 
@@ -11,7 +11,8 @@ import { ModalDetalleGrupoElementoComponent } from './modal-detalle-grupo-elemen
 })
 export class BtruequeComponent  implements OnInit {
 
-  GRUPO_ELEMENTOS : GrupoElementoInterface | null = null;
+  datosResponse!: GrupoElementoDTO;
+  LOADING_DATOS: boolean = false;
 
   constructor(
     private truequeSrv: TruequeService,
@@ -20,23 +21,38 @@ export class BtruequeComponent  implements OnInit {
 	) { }
 
   ngOnInit() {
-    this.truequeSrv.getGrupoElementos()
-    .subscribe((res: GrupoElementoInterface) => {
-      this.GRUPO_ELEMENTOS = res;
-    })
+    this.loadDataInit();
   }
 
-  async show(id: number) {
+  async show(data: DataGrupoElementosDTO) {
 
     const modal = await this.modalCtrl.create({
       component: ModalDetalleGrupoElementoComponent,
       backdropDismiss: false,
       componentProps: {
-        id
+        data
       } 
     });
 
     modal.present();
+  }
+
+  loadDataInit(ev: any = null) {
+    this.LOADING_DATOS = true;
+    this.truequeSrv.getGrupoElementos()
+    .subscribe((res: GrupoElementoDTO) => {
+      this.LOADING_DATOS = false;
+      this.datosResponse = res;
+      if (ev) ev.target.complete();
+    },(error : any)=> {
+      this.LOADING_DATOS = false;
+      this.datosResponse = error.error
+      if (ev) ev.target.complete();
+    })
+  }
+
+  handleRefresh(ev: any) {
+    this.loadDataInit(ev);
   }
   
 
