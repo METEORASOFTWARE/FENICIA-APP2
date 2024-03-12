@@ -1,0 +1,51 @@
+[
+    {
+        "name": "PORTADA",
+        "link" : "home",
+        "icon" : "home",
+        "disabled" : false,
+        "check_user" : false
+    },
+    {
+        "name": "REGISTRO",
+        "link" : "registro",
+        "icon" : "log-in",
+        "disabled" : false,
+        "check_user" : false
+    },
+    {
+        "name": "NUEVA OFERTA",
+        "link" : "trueque",
+        "icon" : "git-compare",
+        "disabled" : false,
+        "check_user" : true
+    },
+    {
+        "name": "MIS OFERTAS",
+        "link" : "misofertas",
+        "icon" : "git-compare",
+        "disabled" : false,
+        "check_user" : true
+    },
+    {
+        "name": "BÚSQUEDA DE OFERTAS",
+        "link" : "btrueque",
+        "icon" : "telescope",
+        "disabled" : false,
+        "check_user" : false
+    },
+    {
+        "name": "PROPUESTA DE TRUEQUE",
+        "link" : "propuesta",
+        "icon" : "telescope",
+        "disabled" : true,
+        "check_user" : false
+    },
+    {
+        "name": "COMUNIDAD",
+        "link" : "comunidad",
+        "icon" : "earth",
+        "disabled" : false,
+        "check_user" : false
+    }
+]

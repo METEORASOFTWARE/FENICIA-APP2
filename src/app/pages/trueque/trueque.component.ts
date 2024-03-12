@@ -24,6 +24,7 @@ export class TruequeComponent  implements OnInit {
   isAlertOpen = false;
   DATA_DEVICE = { info : { model: null, osVersion: null, platform: null}, id : { identifier : null }};
   SELECT_SUB: number = 0
+  INFO_USER: any = '';
 
   public categoriasActions = [
     {
@@ -94,6 +95,8 @@ export class TruequeComponent  implements OnInit {
     private modalCtrl: ModalController,
   
   ) { 
+    this.INFO_USER = localStorage.getItem('_infoUser');
+    this.INFO_USER = JSON.parse(this.INFO_USER);
     this.FORM = this.createForm();
   }
 
@@ -118,6 +121,7 @@ export class TruequeComponent  implements OnInit {
       subcategorias              : this.fb.array([]),
       nueva_categoria           : [ '' ],
       nueva_subcategoria        : [ '' ],
+      usuario                   : [ this.INFO_USER.COD_CLIE]
     });
   }
 
@@ -147,7 +151,7 @@ export class TruequeComponent  implements OnInit {
         productData.append("codigo", idCurrent);
         productData.append("unidad", "U");
         productData.append("nombre", this.FORM.get('nombre_servicio')?.value );
-        productData.append("usuario", "FE-0000001");
+        productData.append("usuario", this.FORM.get('usuario')?.value);
         productData.append("descripcion", this.FORM.get('descripcion_servicio')?.value);
         productData.append("agrextra", this.FORM.get('categoria')?.value);
 

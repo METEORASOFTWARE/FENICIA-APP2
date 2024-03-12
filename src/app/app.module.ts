@@ -26,6 +26,7 @@ import { ModalSubcategoriaComponent } from './pages/trueque/modal-subcategoria/m
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
+import { SharedModule } from './pages/shared/shared.module';
 
 const config: SocketIoConfig = { url: environment.wsUrl, options: {} };
 
@@ -58,7 +59,8 @@ const config: SocketIoConfig = { url: environment.wsUrl, options: {} };
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    SharedModule
   ],
   providers: [
     { 

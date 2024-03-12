@@ -7,22 +7,16 @@ import { Device } from '@capacitor/device';
   styleUrls: ['./registro.component.scss'],
 })
 export class RegistroComponent  implements OnInit {
-
-  DATA_DEVICE = { info : { model: null, osVersion: null, platform: null}, id : { identifier : null }};
+  UUID_DEVICE: any = '';
+  INFO_USER: any = '';
 
   constructor() { 
-    const logDeviceInfo:any = async () => {
-      const info = await Device.getInfo();
-      const id = await Device.getId();
-      const data = { info, id}
-      return data;
-    };
-    logDeviceInfo().then( (res: any) => {
-      this.DATA_DEVICE = res;
-      console.log(this.DATA_DEVICE);
-    })
+    this.UUID_DEVICE = localStorage.getItem('_uuid_device');
+    this.INFO_USER = localStorage.getItem('_infoUser');
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.INFO_USER = JSON.parse(this.INFO_USER);
+  }
 
 }

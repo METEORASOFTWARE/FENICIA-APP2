@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { OfertasService } from 'src/app/servicios/ofertas/ofertas.service';
 
 @Component({
@@ -10,12 +9,17 @@ import { OfertasService } from 'src/app/servicios/ofertas/ofertas.service';
 export class MisofertasComponent  implements OnInit {
 
   LISTA_OFERTAS : any;
+  INFO_USER: any = '';
+
   constructor(
     private ofertaSrv: OfertasService
-  ) { }
+  ) { 
+    this.INFO_USER = localStorage.getItem('_infoUser');
+    this.INFO_USER = JSON.parse(this.INFO_USER);
+  }
 
   ngOnInit() {
-    this.ofertaSrv.get('FE-0000001')
+    this.ofertaSrv.get(this.INFO_USER.COD_CLIE)
     .subscribe( (res: any) => {
       this.LISTA_OFERTAS = res.data;
     });
