@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Device } from '@capacitor/device';
 import { Clipboard } from '@capacitor/clipboard';
 import { ToastController } from '@ionic/angular';
+import { AuthService } from 'src/app/servicios/auth/auth.service';
+import { UserInfoData } from 'src/app/interface/user-info-interface';
+import { DeviceInfoService } from 'src/app/servicios/device-info/device-info.service';
+import { DeviceInfoPWA } from 'src/app/interface/device-info';
 
 
 @Component({
@@ -10,24 +14,26 @@ import { ToastController } from '@ionic/angular';
   styleUrls: ['./registro.component.scss'],
 })
 export class RegistroComponent  implements OnInit {
-  UUID_DEVICE: any = '';
-  INFO_USER: any = '';
+  UUID_DEVICE: DeviceInfoPWA | null;
+  INFO_USER: UserInfoData | null;
 
   constructor(
-    private toastController: ToastController
+    private toastController: ToastController,
+    private authSrv: AuthService,
+    private deviSrv: DeviceInfoService
   ) { 
-    this.UUID_DEVICE = localStorage.getItem('_uuid_device');
-    this.INFO_USER = localStorage.getItem('_infoUser');
+    this.INFO_USER = this.authSrv.getInfoUserLocalStorage();
+    this.UUID_DEVICE = this.deviSrv.getInfoDeviceLocalStorage()
   }
-
+  
   ngOnInit() {
-    this.INFO_USER = JSON.parse(this.INFO_USER);
+    
   }
 
   async copyPWAID() {
 
     await Clipboard.write({
-      string: this.UUID_DEVICE
+      string: this.UUID_DEVICE?._uuid_device
     });
 
     await this.presentToast();
@@ -36,7 +42,7 @@ export class RegistroComponent  implements OnInit {
 
   async presentToast() {
     const toast = await this.toastController.create({
-      message: `ID ${ this.UUID_DEVICE } copiado correctamente`,
+      message: `ID ${ this.UUID_DEVICE?._uuid_device } copiado correctamente`,
       duration: 1500,
       position: `top`,
     });

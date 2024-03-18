@@ -28,4 +28,8 @@ export class AuthService {
     else 
       return null;
   }
+
+  public removeInfoUserLocalStorage() {
+    localStorage.removeItem(`_info_user`);
+  }
 }

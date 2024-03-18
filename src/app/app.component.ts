@@ -4,13 +4,14 @@ import { register } from 'swiper/element/bundle';
 import { environment } from 'src/environments/environment';
 import { MenuService } from './servicios/menu/menu.service';
 import { DeviceInfoService } from './servicios/device-info/device-info.service';
-import { concatMap, forkJoin, map, of } from 'rxjs';
+import { catchError, concatMap, forkJoin, map, of } from 'rxjs';
 import { AuthService } from './servicios/auth/auth.service';
 import { AccesoService } from './servicios/acceso/acceso.service';
 import { TokenInterface } from './interface/token-interface';
 import { DeviceInfoPWA } from './interface/device-info';
 import { UserInfoInterface } from './interface/user-info-interface';
 import { AccesoInterface } from './interface/acceso-interface';
+import { responseAPIDTO } from './interface/response-interface';
 
 register();
 
@@ -41,19 +42,30 @@ export class AppComponent implements OnInit {
       }),
       concatMap( (device: DeviceInfoPWA)=> {
         this.deviceSrv.setInfoDeviceLocalStorage(device)
+
         return this.authSrv.getInfoUser(device._uuid_device)
+        .pipe(
+          catchError( (error: responseAPIDTO) => {
+            this.authSrv.removeInfoUserLocalStorage();
+            return of(null)
+          })
+        );
       }),
-      concatMap( (user : UserInfoInterface) => {
-        this.authSrv.setInfoUserLocalStorage(user.data[0])
-        const device = this.deviceSrv.getInfoDeviceLocalStorage()
+      concatMap( (user : UserInfoInterface | null) => {
+        if (user !== null ) {
+          this.authSrv.setInfoUserLocalStorage(user.data[0])
+          const device = this.deviceSrv.getInfoDeviceLocalStorage()
+  
+          var data = new URLSearchParams();
+  
+          data.append("pwaid", device?._uuid_device.toString().trim() ?? "");
+          data.append("ip", "localhost");
+          data.append("usuario", user.data[0].COD_CLIE.toString().trim() ?? "" );
+          return accesoSrv.post(data);
+        } else {
+          return of(null)
+        }
 
-        var data = new URLSearchParams();
-
-        data.append("pwaid", device?._uuid_device.toString().trim() ?? "");
-        data.append("ip", "localhost");
-        data.append("usuario", user.data[0].COD_CLIE.toString().trim() ?? "" );
-
-        return accesoSrv.post(data);
       }),
       concatMap( (acceso: AccesoInterface)=> {
         return this.menuSrv.get();
