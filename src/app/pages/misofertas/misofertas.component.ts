@@ -4,6 +4,8 @@ import { OfertasService } from 'src/app/servicios/ofertas/ofertas.service';
 
 import { MisOfertasDTO, MisOfertasListaDTO } from 'src/app/interface/misOfertas-interface';
 import { ImagesOfertasComponent } from '../shared/images-ofertas/images-ofertas.component';
+import { UserInfoData } from 'src/app/interface/user-info-interface';
+import { AuthService } from 'src/app/servicios/auth/auth.service';
 
 @Component({
   selector: 'app-misofertas',
@@ -12,17 +14,17 @@ import { ImagesOfertasComponent } from '../shared/images-ofertas/images-ofertas.
 })
 export class MisofertasComponent  implements OnInit {
 
-
-  INFO_USER: any = '';
   datosResponse!: MisOfertasDTO;
   LOADING_DATOS: boolean = false;
-
+  INFO_USER: UserInfoData | null;
+  
   constructor(
     private ofertaSrv: OfertasService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private authSrv: AuthService,
   ) { 
-    this.INFO_USER = localStorage.getItem('_infoUser');
-    this.INFO_USER = JSON.parse(this.INFO_USER);
+    this.INFO_USER = this.authSrv.getInfoUserLocalStorage();
+    
   }
 
   ngOnInit() {
@@ -31,7 +33,7 @@ export class MisofertasComponent  implements OnInit {
 
   loadDataInit(ev: any = null) {
     this.LOADING_DATOS = true;
-    this.ofertaSrv.get(this.INFO_USER.COD_CLIE)
+    this.ofertaSrv.get(this.INFO_USER?.COD_CLIE ?? "")
     .subscribe( (res: any) => {
       this.LOADING_DATOS = false;
       this.datosResponse = res;

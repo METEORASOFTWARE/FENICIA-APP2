@@ -25,11 +25,6 @@ export class TokenService {
 		data.set('password', environment.token.password);
 		data.set('grant_type', environment.token.grant_type);
 		data.set('client_id', environment.token.client_id);
-
-    // this.envSrv.postQuery('', data.toString())
-    // .subscribe( (res: TokenInterface) => {
-    //   localStorage.setItem('token', res.access_token);
-    // })
     return this.envSrv.postQuery('', data.toString())
   }
 

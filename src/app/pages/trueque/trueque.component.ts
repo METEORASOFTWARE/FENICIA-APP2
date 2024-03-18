@@ -7,6 +7,8 @@ import { MensajesService } from 'src/app/servicios/mensajes/mensajes.service';
 import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
 
 import { ModalSubcategoriaComponent } from './modal-subcategoria/modal-subcategoria.component';
+import { AuthService } from 'src/app/servicios/auth/auth.service';
+import { UserInfoData } from 'src/app/interface/user-info-interface';
 
 
 @Component({
@@ -23,7 +25,7 @@ export class TruequeComponent  implements OnInit {
   fotos: string[] = [];
 
   SELECT_SUB: number = 0
-  INFO_USER: any = '';
+  INFO_USER: UserInfoData | null;
 
   public categoriasActions = [
     {
@@ -92,10 +94,10 @@ export class TruequeComponent  implements OnInit {
     private alertController: AlertController,
     private smsSrv: MensajesService,
     private modalCtrl: ModalController,
+    private authSrv: AuthService,
   
   ) { 
-    this.INFO_USER = localStorage.getItem('_infoUser');
-    this.INFO_USER = JSON.parse(this.INFO_USER);
+    this.INFO_USER = this.authSrv.getInfoUserLocalStorage();
     this.FORM = this.createForm();
   }
 
@@ -120,7 +122,7 @@ export class TruequeComponent  implements OnInit {
       subcategorias              : this.fb.array([]),
       nueva_categoria           : [ '' ],
       nueva_subcategoria        : [ '' ],
-      usuario                   : [ this.INFO_USER.COD_CLIE]
+      usuario                   : [ this.INFO_USER?.COD_CLIE]
     });
   }
 
