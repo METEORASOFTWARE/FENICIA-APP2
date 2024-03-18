@@ -18,7 +18,7 @@ export class TokenService {
     
   }
 
-  public generateToken() {
+  public generateToken(): Observable<TokenInterface> {
 
     const data = new URLSearchParams();
 		data.set('username', environment.token.username);
@@ -26,10 +26,18 @@ export class TokenService {
 		data.set('grant_type', environment.token.grant_type);
 		data.set('client_id', environment.token.client_id);
 
-    this.envSrv.postQuery('', data.toString())
-    .subscribe( (res: TokenInterface) => {
-      localStorage.setItem('token', res.access_token);
-    })
+    // this.envSrv.postQuery('', data.toString())
+    // .subscribe( (res: TokenInterface) => {
+    //   localStorage.setItem('token', res.access_token);
+    // })
+    return this.envSrv.postQuery('', data.toString())
+  }
 
+  public setTokenLocalStorage(token: TokenInterface) {
+    localStorage.setItem('token', token.access_token );
+  }
+
+  public removeTokenLocalStorage() {
+    localStorage.removeItem('token');
   }
 }

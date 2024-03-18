@@ -4,8 +4,13 @@ import { register } from 'swiper/element/bundle';
 import { environment } from 'src/environments/environment';
 import { MenuService } from './servicios/menu/menu.service';
 import { DeviceInfoService } from './servicios/device-info/device-info.service';
-import { map } from 'rxjs';
+import { concatMap, forkJoin, map, of } from 'rxjs';
 import { AuthService } from './servicios/auth/auth.service';
+import { AccesoService } from './servicios/acceso/acceso.service';
+import { TokenInterface } from './interface/token-interface';
+import { DeviceInfoPWA } from './interface/device-info';
+import { UserInfoInterface } from './interface/user-info-interface';
+import { AccesoInterface } from './interface/acceso-interface';
 
 register();
 
@@ -23,49 +28,54 @@ export class AppComponent implements OnInit {
     private tokenSrv: TokenService,
     private menuSrv: MenuService,
     private deviceSrv : DeviceInfoService,
-    private authSrv: AuthService
+    private authSrv: AuthService,
+    private accesoSrv: AccesoService
 
   ) {
 
-    this.tokenSrv.generateToken();
-    
-  }
+    this.tokenSrv.generateToken()
+    .pipe(
+      concatMap( (token: TokenInterface) =>  {
+        this.tokenSrv.setTokenLocalStorage(token);
+        return deviceSrv.getInfoDevice()
+      }),
+      concatMap( (device: DeviceInfoPWA)=> {
+        this.deviceSrv.setInfoDeviceLocalStorage(device)
+        return this.authSrv.getInfoUser(device._uuid_device)
+      }),
+      concatMap( (user : UserInfoInterface) => {
+        this.authSrv.setInfoUserLocalStorage(user.data[0])
+        const device = this.deviceSrv.getInfoDeviceLocalStorage()
 
-  ngOnInit() {
+        var data = new URLSearchParams();
 
-    var _uuid_device = localStorage.getItem('_uuid_device');
+        data.append("pwaid", device?._uuid_device.toString().trim() ?? "");
+        data.append("ip", "localhost");
+        data.append("usuario", user.data[0].COD_CLIE.toString().trim() ?? "" );
 
-    // 66943667-5fa2-46d4-bbd1-771e590f1224
-    this.authSrv.getInfoUser(_uuid_device).subscribe(
-      (res: any) => {
-        localStorage.setItem(`_infoUser`, JSON.stringify(res.data[0]));
-        this.getMenu();
-      }, (error: any) => {
-        localStorage.removeItem('_infoUser');
-        this.getMenu();
-      }
-    )
-  }
-
-
-  async getMenu() {
-
-    const _infoUser = localStorage.getItem('_infoUser');
-
-    this.menuSrv.get().subscribe( (res: any) => {
+        return accesoSrv.post(data);
+      }),
+      concatMap( (acceso: AccesoInterface)=> {
+        return this.menuSrv.get();
+      }),
+    ).subscribe( res => {
+      const infoUser = authSrv.getInfoUserLocalStorage();
 
       const menuUpdated = res.map( (item: any )=> {
         var disabled = item.disabled;
 
-        if (!_infoUser && item.check_user) {
+        if (!infoUser && item.check_user) {
           disabled = true;
         }
         return { ...item, disabled : disabled }
       })
 
       this.MENU = menuUpdated;
+
     })
+    
+  }
 
-
+  ngOnInit() {
   }
 }
