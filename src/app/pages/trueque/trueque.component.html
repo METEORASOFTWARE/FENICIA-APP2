@@ -96,7 +96,7 @@
 
           <ng-template #sihayfotos>
 
-            <swiper-container slides-per-view="1" css-mode="true">
+            <swiper-container slides-per-view="1" css-mode="true" navigation="true" pagination="true">
   
               <swiper-slide *ngFor = "let foto of fotos; let i = index">
                 <ion-img [src]="foto" style="height: 200px !important; width: 100%; object-fit: cover;"></ion-img>
