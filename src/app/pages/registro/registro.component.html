@@ -104,17 +104,17 @@
 
 </ion-content>
 
-<ion-footer class="ion-no-border ion-padding">
+<ion-footer class="ion-no-border ion-padding" *ngIf="!INFO_USER">
   <ion-toolbar>
 
     <ion-button expand="full" size="large" [disabled]="FORM.invalid" id="present-alert">Registrar</ion-button>
 
   </ion-toolbar>
+  <ion-alert
+    trigger="present-alert"
+    header="¿Está seguro de crear usuario?"
+    [buttons]="alertButtons"
+    (didDismiss)="setResult($event)"
+  ></ion-alert>
 </ion-footer>
 
-<ion-alert
-  trigger="present-alert"
-  header="¿Está seguro de crear usuario?"
-  [buttons]="alertButtons"
-  (didDismiss)="setResult($event)"
-></ion-alert>

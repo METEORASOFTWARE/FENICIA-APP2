@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TokenService } from './servicios/token/token.service';
 import { register } from 'swiper/element/bundle';
 import { environment } from 'src/environments/environment';
 import { MenuService } from './servicios/menu/menu.service';
 import { DeviceInfoService } from './servicios/device-info/device-info.service';
-import { catchError, concatMap, forkJoin, map, of } from 'rxjs';
+import { Subscription, catchError, concatMap, forkJoin, map, of } from 'rxjs';
 import { AuthService } from './servicios/auth/auth.service';
 import { AccesoService } from './servicios/acceso/acceso.service';
 import { TokenInterface } from './interface/token-interface';
@@ -20,11 +20,12 @@ register();
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy  {
 
   versionFenicia = environment.versionFenicia
   MENU : any = ''
-  
+  menuRebuildSubscription: Subscription;
+
   constructor(
     private tokenSrv: TokenService,
     private menuSrv: MenuService,
@@ -33,6 +34,11 @@ export class AppComponent implements OnInit {
     private accesoSrv: AccesoService
 
   ) {
+
+    this.menuRebuildSubscription = this.menuSrv.menuRebuild.subscribe((res: any) => {
+      if (res)
+        this.setMenu(res);
+    });
 
     this.tokenSrv.generateToken()
     .pipe(
@@ -71,23 +77,31 @@ export class AppComponent implements OnInit {
         return this.menuSrv.get();
       }),
     ).subscribe( res => {
-      const infoUser = authSrv.getInfoUserLocalStorage();
-
-      const menuUpdated = res.map( (item: any )=> {
-        var disabled = item.disabled;
-
-        if (!infoUser && item.check_user) {
-          disabled = true;
-        }
-        return { ...item, disabled : disabled }
-      })
-
-      this.MENU = menuUpdated;
-
+      this.setMenu(res)
     })
-    
   }
 
   ngOnInit() {
+
+  }
+
+  ngOnDestroy(): void {
+    this.menuRebuildSubscription.unsubscribe();
+  }
+
+  async setMenu(res: any) {
+
+    const infoUser = this.authSrv.getInfoUserLocalStorage();
+
+    const menuUpdated = res.map( (item: any )=> {
+      var disabled = item.disabled;
+
+      if (!infoUser && item.check_user) {
+        disabled = true;
+      }
+      return { ...item, disabled : disabled }
+    })
+
+    this.MENU = menuUpdated;
   }
 }

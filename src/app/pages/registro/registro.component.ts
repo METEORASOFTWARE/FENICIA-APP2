@@ -3,14 +3,16 @@ import { Device } from '@capacitor/device';
 import { Clipboard } from '@capacitor/clipboard';
 import { ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/servicios/auth/auth.service';
-import { UserInfoData } from 'src/app/interface/user-info-interface';
+import { UserInfoData, UserInfoInterface } from 'src/app/interface/user-info-interface';
 import { DeviceInfoService } from 'src/app/servicios/device-info/device-info.service';
 import { DeviceInfoPWA } from 'src/app/interface/device-info';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegistroService } from 'src/app/servicios/registro/registro.service';
-import { concatMap, map, of } from 'rxjs';
+import { catchError, concatMap, map, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { MensajesService } from 'src/app/servicios/mensajes/mensajes.service';
+import { MenuService } from 'src/app/servicios/menu/menu.service';
+import { responseAPIDTO } from 'src/app/interface/response-interface';
 
 
 @Component({
@@ -27,16 +29,12 @@ export class RegistroComponent  implements OnInit {
     {
       text: 'Cancel',
       role: 'cancel',
-      handler: () => {
-        console.log('Alert canceled');
-      },
+      handler: () => {},
     },
     {
       text: 'OK',
       role: 'confirm',
-      handler: () => {
-        console.log('Alert confirmed');
-      },
+      handler: () => {},
     },
   ];
 
@@ -48,8 +46,10 @@ export class RegistroComponent  implements OnInit {
     private registroSrv: RegistroService,
     private router: Router,
     private smsSrv: MensajesService,
+    private menuSrv: MenuService
   ) { 
     this.INFO_USER = this.authSrv.getInfoUserLocalStorage();
+    
     this.UUID_DEVICE = this.deviSrv.getInfoDeviceLocalStorage();
     this.FORM = this.createForm();
   }
@@ -117,19 +117,31 @@ export class RegistroComponent  implements OnInit {
         registroData.append("pwaid", this.UUID_DEVICE?._uuid_device ?? "");
 
         return this.registroSrv.post(registroData)
+        .pipe(
+          catchError( (error: responseAPIDTO) => {
+            return of(null)
+          })
+        )
+      }),
+      concatMap( (res: responseAPIDTO | null) => {
+        if (res !== null) {
+          return this.authSrv.getInfoUser(this.UUID_DEVICE?._uuid_device)
+        } else {
+          return of (null)
+        }
       })
-    ).subscribe( (res:any) => {
-      console.log(`data`, res)
-      this.smsSrv.openSuccess( res.message )
-      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-        this.router.navigate([this.router.url])
-      })
-      this.smsSrv.closeLoading();
+    ).subscribe( (user : UserInfoInterface | null) => {
+      if (user !== null) {
+        this.authSrv.setInfoUserLocalStorage(user.data[0]);
+        this.INFO_USER = this.authSrv.getInfoUserLocalStorage();
+        this.smsSrv.openSuccess( `Usuario registrado correctamente` )
+        this.menuSrv.rebuildMenu();
+        this.smsSrv.closeLoading();
+      }
     });
   }
 
   setResult(ev: any) {
-    console.log(`Dismissed with role: ${ev.detail.role}`);
     const role = ev.detail.role;
     if (role === 'confirm') {
       this.save();
