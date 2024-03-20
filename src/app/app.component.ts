@@ -58,19 +58,19 @@ export class AppComponent implements OnInit, OnDestroy  {
         );
       }),
       concatMap( (user : UserInfoInterface | null) => {
-        if (user !== null ) {
+        var data = new URLSearchParams();
+        const device = this.deviceSrv.getInfoDeviceLocalStorage()
+        data.append("pwaid", device?._uuid_device.toString().trim() ?? "");
+        data.append("ip", "localhost");
+        
+        if (user) {
           this.authSrv.setInfoUserLocalStorage(user.data[0])
-          const device = this.deviceSrv.getInfoDeviceLocalStorage()
-  
-          var data = new URLSearchParams();
-  
-          data.append("pwaid", device?._uuid_device.toString().trim() ?? "");
-          data.append("ip", "localhost");
-          data.append("usuario", user.data[0].COD_CLIE.toString().trim() ?? "" );
-          return accesoSrv.post(data);
-        } else {
-          return of(null)
+          data.append("usuario", user.data[0].COD_CLIE);
+        }else {
+          data.append("usuario",``);
         }
+        
+        return accesoSrv.post(data);
 
       }),
       concatMap( (acceso: AccesoInterface)=> {

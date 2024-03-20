@@ -43,4 +43,21 @@ export class MensajesService {
     toast.present();
   }
 
+  async openError( sms: string) {
+    const toast = await this.toastController.create({
+      message: sms,
+      duration: 3000,
+      color: 'danger',
+      icon: 'alert',
+      buttons: [{
+          text: 'OK',
+          role: 'cancel',
+          handler: () => {
+          }
+        }
+      ]      
+    });
+    toast.present();
+  }
+
 }

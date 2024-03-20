@@ -12,3 +12,12 @@ export interface UserInfoData {
   E_MAIL?: any;
   PWA_ID: string;
 }
+
+export interface UserCreatedInterface extends responseAPIDTO {
+  message : string;
+}
+
+export interface UserInfoCreatedInterface {
+  create: UserCreatedInterface | null,
+  info?: UserInfoInterface | null
+}

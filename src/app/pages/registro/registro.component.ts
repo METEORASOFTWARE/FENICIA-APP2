@@ -3,7 +3,7 @@ import { Device } from '@capacitor/device';
 import { Clipboard } from '@capacitor/clipboard';
 import { ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/servicios/auth/auth.service';
-import { UserInfoData, UserInfoInterface } from 'src/app/interface/user-info-interface';
+import { UserCreatedInterface, UserInfoCreatedInterface, UserInfoData, UserInfoInterface } from 'src/app/interface/user-info-interface';
 import { DeviceInfoService } from 'src/app/servicios/device-info/device-info.service';
 import { DeviceInfoPWA } from 'src/app/interface/device-info';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -123,21 +123,39 @@ export class RegistroComponent  implements OnInit {
           })
         )
       }),
-      concatMap( (res: responseAPIDTO | null) => {
-        if (res !== null) {
+      concatMap( (create: UserCreatedInterface | null) => {
+        let data : UserInfoCreatedInterface
+        if (create !== null) {
           return this.authSrv.getInfoUser(this.UUID_DEVICE?._uuid_device)
+          .pipe(
+            map( (info: UserInfoInterface) => {
+              data = { create: create, info: info }
+              return data
+            })
+          )
         } else {
-          return of (null)
+          data = { create: create, info: null }
+          return of (data )
         }
       })
-    ).subscribe( (user : UserInfoInterface | null) => {
-      if (user !== null) {
-        this.authSrv.setInfoUserLocalStorage(user.data[0]);
-        this.INFO_USER = this.authSrv.getInfoUserLocalStorage();
-        this.smsSrv.openSuccess( `Usuario registrado correctamente` )
-        this.menuSrv.rebuildMenu();
-        this.smsSrv.closeLoading();
+    ).subscribe( ( user : UserInfoCreatedInterface ) => {
+      if (user.create) {
+        
+        let datosUsuario : UserInfoData | null = null;
+
+        if (user.info )
+          datosUsuario = user.info?.data[0];
+
+        if (datosUsuario) {
+          this.authSrv.setInfoUserLocalStorage( datosUsuario );
+          this.INFO_USER = this.authSrv.getInfoUserLocalStorage();
+          this.smsSrv.openSuccess( user?.create.message ?? `Usuario registrado correctamente` )
+          this.menuSrv.rebuildMenu();
+        }
+      } else {
+        this.smsSrv.openError(`Error al registrar cliente` )
       }
+      this.smsSrv.closeLoading();
     });
   }
 
