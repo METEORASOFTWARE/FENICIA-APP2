@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { HeaderComponent } from './header/header.component';
 import { LoadingComponent } from './loading/loading.component';
 import { ImagesOfertasComponent } from './images-ofertas/images-ofertas.component';
+import { SheetErrorComponent } from './sheet-error/sheet-error.component';
 
 
 
@@ -12,7 +13,8 @@ import { ImagesOfertasComponent } from './images-ofertas/images-ofertas.componen
   declarations: [
     HeaderComponent,
     LoadingComponent,
-    ImagesOfertasComponent
+    ImagesOfertasComponent,
+    SheetErrorComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +24,8 @@ import { ImagesOfertasComponent } from './images-ofertas/images-ofertas.componen
   exports: [
     HeaderComponent,
     LoadingComponent,
-    ImagesOfertasComponent
+    ImagesOfertasComponent,
+    SheetErrorComponent
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

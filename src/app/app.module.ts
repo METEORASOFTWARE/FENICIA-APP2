@@ -27,6 +27,7 @@ import { ModalSubcategoriaComponent } from './pages/trueque/modal-subcategoria/m
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
 import { SharedModule } from './pages/shared/shared.module';
+import { ModalImagesErrorComponent } from './pages/trueque/modal-images-error/modal-images-error.component';
 
 const config: SocketIoConfig = { url: environment.wsUrl, options: {} };
 
@@ -43,7 +44,7 @@ const config: SocketIoConfig = { url: environment.wsUrl, options: {} };
     MisofertasComponent,
     PropuestaComponent,
     ModalSubcategoriaComponent,
-  
+    ModalImagesErrorComponent
   ],
   imports: [
     BrowserModule, 

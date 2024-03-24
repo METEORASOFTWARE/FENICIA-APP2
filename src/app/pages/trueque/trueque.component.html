@@ -25,8 +25,6 @@
       </ion-textarea>
     </ion-item>
 
-
-
     <ion-row>
       <ion-col size="8">
 
@@ -48,7 +46,6 @@
           </ion-item>
 
         </ng-template>
-
 
       </ion-col>
       <ion-col size="4">
@@ -81,11 +78,10 @@
         <ion-col size="12">
           <ion-text color="primary" class="ion-text-center ion-align-items-center">
             <ion-icon name="image" size="large"></ion-icon>
-            <span class="ion-padding-start">Imágenes del Servicio</span>
+            <span class="ion-padding-start">Imágenes del Servicio *</span>
           </ion-text>
         </ion-col>
       </ion-row>
-
 
       <ion-row>
         <ion-col size="12">
@@ -113,7 +109,6 @@
 
           </ng-template>
 
-
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -126,7 +121,10 @@
   <ion-toolbar>
 
     <ion-buttons slot="start" class="ion-padding-start">
-      <ion-button color="primary" fill="solid" (click)="save()"  [disabled]="FORM.invalid">
+      <!-- <ion-button color="primary" fill="solid" (click)="save()" [disabled]="FORM.invalid || fotos.length == 0">
+        CREAR
+      </ion-button> -->
+      <ion-button color="primary" fill="solid" (click)="save()" [disabled]="FORM.invalid">
         CREAR
       </ion-button>
     </ion-buttons>

@@ -9,6 +9,12 @@ import { TruequeService } from 'src/app/servicios/trueque/trueque.service';
 import { ModalSubcategoriaComponent } from './modal-subcategoria/modal-subcategoria.component';
 import { AuthService } from 'src/app/servicios/auth/auth.service';
 import { UserInfoData } from 'src/app/interface/user-info-interface';
+import { EMPTY, catchError, concatMap, from, lastValueFrom, map, of, throwError, toArray } from 'rxjs';
+import { responseAPIDTO } from 'src/app/interface/response-interface';
+import { SheetErrorComponent } from '../shared/sheet-error/sheet-error.component';
+import { NuevoTruequeInterface } from 'src/app/interface/nuevo-trueque-interface';
+import Swiper from 'swiper';
+import { ModalImagesErrorComponent } from './modal-images-error/modal-images-error.component';
 
 
 @Component({
@@ -26,6 +32,8 @@ export class TruequeComponent  implements OnInit {
 
   SELECT_SUB: number = 0
   INFO_USER: UserInfoData | null;
+  mySwiper!: Swiper;
+
 
   public categoriasActions = [
     {
@@ -99,6 +107,7 @@ export class TruequeComponent  implements OnInit {
   ) { 
     this.INFO_USER = this.authSrv.getInfoUserLocalStorage();
     this.FORM = this.createForm();
+    this.initSwipper();
   }
 
   ngOnInit() {
@@ -122,17 +131,20 @@ export class TruequeComponent  implements OnInit {
       subcategorias              : this.fb.array([]),
       nueva_categoria           : [ '' ],
       nueva_subcategoria        : [ '' ],
-      usuario                   : [ this.INFO_USER?.COD_CLIE]
+      usuario                   : [ this.INFO_USER?.COD_CLIE],
+      codigo                    : [ '' ]
     });
   }
 
   async tomarFoto() {
     await this.fotosService.agregarFoto();
     this.fotos = this.fotosService.fotos;
+    
+    this.initSwipper();
   }
 
 
-  save() {
+  saveBack() {
 
     this.smsSrv.openLoading();
 
@@ -168,6 +180,105 @@ export class TruequeComponent  implements OnInit {
 
         })
       })
+    })
+  }
+
+  async save() {
+    this.smsSrv.openLoading();
+
+    this.truequeSrv.getNextId()
+    .pipe(
+      concatMap( (res: any) => {
+        var idCurrent = res.data[0][""];
+        idCurrent = idCurrent.toString().padStart(7, '0');
+        return of(idCurrent)
+      }),
+      concatMap( (res: any) => {
+        return this.truequeSrv.getPar()
+        .pipe(  
+          map((pair: any) => {
+            const parData = pair.data[0];
+            res = parData.A29_PRE+res;
+            return res;
+          })
+        );
+      }),
+      concatMap( (res: string) => {
+
+        var productData = new URLSearchParams();
+        this.FORM.get("codigo")?.setValue(res.toString())
+
+        productData.append("codigo", res.toString());
+        //productData.append("codigo", "");
+        productData.append("unidad", "U");
+        productData.append("nombre", this.FORM.get('nombre_servicio')?.value );
+        productData.append("usuario", this.FORM.get('usuario')?.value);
+        productData.append("descripcion", this.FORM.get('descripcion_servicio')?.value);
+        productData.append("agrextra", this.FORM.get('categoria')?.value);
+        
+        return this.truequeSrv.postProduct(productData)
+        .pipe(
+          catchError( (error: any) => {
+            const newError : NuevoTruequeInterface = error.error;
+            if (! newError.code) {
+              const errorUnknow: NuevoTruequeInterface = {
+                message: `::ERROR AL REALIZAR LA PETICIÓN::`,
+                success: false,
+                name: `BAD REQUEST`,
+                code: "400.1"
+              }
+              return of(errorUnknow)
+            }
+            return of(newError)
+          })
+        )
+      }),
+
+      concatMap( (res: NuevoTruequeInterface) => {
+        
+        if ( !res.success ) {
+          this.openSheetError(res.message)
+          return of([res])
+        } else {
+
+          if ( this.fotos.length === 0) {
+            return of([res]);
+          }
+
+          return from(this.fotos).pipe(
+            concatMap((foto, index) => {
+              const data = new URLSearchParams();
+              data.append('codigo', this.FORM.get('codigo')?.value);
+              data.append('consecutivo', (index + 1).toString());
+              data.append('imagen', foto.toString());
+
+              return this.truequeSrv.postStoreImage(data).pipe(
+                concatMap( (imageUpload) => {
+                  this.fotos.splice(index, 1)
+                  this.initSwipper();
+                  return of(imageUpload)
+                }),
+                catchError((error: any) => {
+                  const newErrorImage: NuevoTruequeInterface = error.error;
+                  return of(newErrorImage);
+                })
+              );
+            }),
+            catchError( () => {  return EMPTY }),
+            toArray(),
+            map( response => response )
+          )
+        }
+      }),
+    ).subscribe( (res: NuevoTruequeInterface[] ) =>  {
+      const temp = res.find(res => !res.success);
+      if ( temp && !temp.success ) {
+        this.openModalImagesError({});
+      } else {
+        this.smsSrv.openSuccess( temp?.message ?? `Producto creado!` )
+        this.clearNewForm();
+      }
+      this.smsSrv.closeLoading();
     })
   }
 
@@ -233,7 +344,6 @@ export class TruequeComponent  implements OnInit {
     this.FORM.get('nueva_categoria')?.setValue("");
     this.FORM.get('nueva_categoria')?.updateValueAndValidity(); 
   }
-
 
   async crearNuevaSubCategoria() {
     const alert = await this.alertController.create({
@@ -303,7 +413,103 @@ export class TruequeComponent  implements OnInit {
   eliminarFoto(index: number): void {
     if (index >= 0 && index < this.fotos.length) {
       this.fotos.splice(index, 1);
+      this.initSwipper();
     }
   }
 
+  async openSheetError(error: string) {
+
+    const modal = await this.modalCtrl.create({
+      component: SheetErrorComponent,
+      backdropDismiss: false,
+      initialBreakpoint : 0.50,
+      breakpoints: [0, 0.25, 0.5, 0.75],
+      handleBehavior: `cycle`,
+      componentProps: {
+        error
+      } 
+    });
+
+    modal.onDidDismiss()
+    .then( (data: any) => {
+      if ( data.role === `gesture` )
+        return false;
+
+      if (data.data)
+        this.save();
+
+        return true;
+    })
+    
+    modal.present();
+
+  }
+
+  initSwipper() {
+    this.mySwiper = new Swiper('swiper-container', {
+      slidesPerView: 1,
+      cssMode: true,
+      navigation: true,
+      pagination: true
+    })
+  }
+
+  async openModalImagesError(data: any) {
+
+    const modal = await this.modalCtrl.create({
+      component: ModalImagesErrorComponent,
+      backdropDismiss: false,
+      componentProps: { data, fotos: this.fotos }
+    });
+
+    modal.onDidDismiss()
+    .then( (data: any) => {
+      if ( data.data ) {
+        this.smsSrv.openLoading();
+        this.reprocesImages().subscribe({
+          next: (res: any) => {
+            this.smsSrv.closeLoading();
+            this.smsSrv.openSuccess(`Imagenes cargada correctamente` )
+            this.clearNewForm();
+          },
+          error: (error: any) => {
+            this.smsSrv.closeLoading();
+            this.smsSrv.openError(`ERROR al procesar Imagenes` )
+            this.clearNewForm();
+          }
+        })
+      } else {
+        this.clearNewForm();
+      }
+    })
+
+    modal.present();
+  }
+
+  reprocesImages() {
+
+    return from(this.fotos).pipe(
+      concatMap((foto, index) => {
+        const data = new URLSearchParams();
+        data.append('codigo', this.FORM.get('codigo')?.value);
+        data.append('consecutivo', (index + 1).toString());
+        data.append('imagen', foto.toString());
+
+        return this.truequeSrv.postStoreImage(data).pipe(
+          concatMap( (imageUpload) => {
+            this.fotos.splice(index, 1)
+            this.initSwipper();
+            return of(imageUpload)
+          }),
+          catchError((error: any) => {
+            const newErrorImage: NuevoTruequeInterface = error.error;
+            return of(newErrorImage);
+          })
+        );
+      }),
+      catchError( () => {  return EMPTY }),
+      toArray(),
+      map( response => response )
+    )
+  }
 }

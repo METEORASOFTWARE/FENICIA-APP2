@@ -1,0 +1,40 @@
+<ion-content>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <ion-icon name="close-circle" color="danger" style="font-size: 5em !important"></ion-icon>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <ion-title color="danger">ERROR</ion-title>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="12">
+        <ion-text class="ion-text-wrap">
+          {{ error }}
+        </ion-text>
+      </ion-col>
+    </ion-row>
+
+
+    <ion-row class="ion-padding-top">
+      <ion-col size="12">
+        <ion-button color="danger" expand="block" fill="solid" (click)="closeModal(true)">
+          Volver a Intentar
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-padding-top ion-text-center">
+      <ion-col size="12">
+        <ion-button fill="clear" color="dark" (click)="closeModal(false)">
+          Cancelar
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
