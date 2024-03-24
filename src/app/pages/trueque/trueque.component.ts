@@ -209,7 +209,6 @@ export class TruequeComponent  implements OnInit {
         this.FORM.get("codigo")?.setValue(res.toString())
 
         productData.append("codigo", res.toString());
-        //productData.append("codigo", "");
         productData.append("unidad", "U");
         productData.append("nombre", this.FORM.get('nombre_servicio')?.value );
         productData.append("usuario", this.FORM.get('usuario')?.value);
