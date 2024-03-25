@@ -25,6 +25,7 @@ export class RegistroComponent  implements OnInit {
   UUID_DEVICE: DeviceInfoPWA | null;
   INFO_USER: UserInfoData | null;
   FORM: FormGroup;
+  LABEL_PWAID!: string;
 
   public alertButtons = [
     {
@@ -57,6 +58,13 @@ export class RegistroComponent  implements OnInit {
   }
   
   ngOnInit() {
+    this.registroSrv.getLabel()
+    .subscribe({
+      next : (res: any) => {
+        this.LABEL_PWAID = res.labelpwaid
+        console.log(res)
+      }
+    })
     
   }
 
