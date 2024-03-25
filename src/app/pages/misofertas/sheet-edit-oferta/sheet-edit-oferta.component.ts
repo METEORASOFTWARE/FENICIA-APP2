@@ -68,6 +68,7 @@ export class SheetEditOfertaComponent  implements OnInit {
       next: (res:any) => {
         this.smsSrv.closeLoading();
         this.smsSrv.openSuccess(res.message);
+        this.modalCtrl.dismiss(true);
       },
       error: (error: any) => {
         this.smsSrv.closeLoading();

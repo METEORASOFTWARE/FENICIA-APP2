@@ -78,12 +78,10 @@ export class MisofertasComponent  implements OnInit {
     modal.onDidDismiss()
     .then( (res:any) => {
       if (res.data) {
+        this.loadDataInit();
       }
     })
-
     modal.present();
-
-
   }
 
 }
