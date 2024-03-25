@@ -6,6 +6,7 @@ import { MisOfertasDTO, MisOfertasListaDTO } from 'src/app/interface/misOfertas-
 import { ImagesOfertasComponent } from '../shared/images-ofertas/images-ofertas.component';
 import { UserInfoData } from 'src/app/interface/user-info-interface';
 import { AuthService } from 'src/app/servicios/auth/auth.service';
+import { SheetEditOfertaComponent } from './sheet-edit-oferta/sheet-edit-oferta.component';
 
 @Component({
   selector: 'app-misofertas',
@@ -22,6 +23,7 @@ export class MisofertasComponent  implements OnInit {
     private ofertaSrv: OfertasService,
     private modalCtrl: ModalController,
     private authSrv: AuthService,
+    
   ) { 
     this.INFO_USER = this.authSrv.getInfoUserLocalStorage();
     
@@ -60,6 +62,28 @@ export class MisofertasComponent  implements OnInit {
 
   handleRefresh(ev: any) {
     this.loadDataInit(ev);
+  }
+
+  async edit(datos: MisOfertasListaDTO) {
+
+    const modal = await this.modalCtrl.create({
+      component: SheetEditOfertaComponent,
+      backdropDismiss: false,
+      initialBreakpoint : 0.75,
+      breakpoints: [0, 0.25, 0.5, 0.75],
+      handleBehavior: `cycle`,
+      componentProps: {datos: datos} 
+    });
+
+    modal.onDidDismiss()
+    .then( (res:any) => {
+      if (res.data) {
+      }
+    })
+
+    modal.present();
+
+
   }
 
 }

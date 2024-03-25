@@ -98,6 +98,14 @@
           </ion-col>
         </ng-template>
       </ion-row>
+
+      <ion-row  *ngIf="!INFO_USER">
+        <ion-col size="12">
+          <ion-text color="dark" class="ion-text-center">
+            <h6>¿Ya tienes cuenta? <ion-text color="primary" (click)="openSheetLogin()"><u>Ingresa Aqu&iacute;</u></ion-text></h6>
+          </ion-text>
+        </ion-col>
+      </ion-row>
     </ion-grid>
 
   </form>

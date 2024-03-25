@@ -22,4 +22,8 @@ export class RegistroService {
     return this.envSrv.postQuery(`UsuarioController.php`, data)
   }
 
+  public put(data:URLSearchParams) {
+    return this.envSrv.putQuery(`UsuarioController.php`, data )
+  }
+
 }

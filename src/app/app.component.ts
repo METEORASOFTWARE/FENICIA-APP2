@@ -47,7 +47,12 @@ export class AppComponent implements OnInit, OnDestroy  {
         return deviceSrv.getInfoDevice()
       }),
       concatMap( (device: DeviceInfoPWA)=> {
-        this.deviceSrv.setInfoDeviceLocalStorage(device)
+
+        const devicetmp = this.deviceSrv.getInfoDeviceLocalStorage();
+        if (!devicetmp)
+          this.deviceSrv.setInfoDeviceLocalStorage(device)
+        else
+          device = devicetmp;
 
         return this.authSrv.getInfoUser(device._uuid_device)
         .pipe(

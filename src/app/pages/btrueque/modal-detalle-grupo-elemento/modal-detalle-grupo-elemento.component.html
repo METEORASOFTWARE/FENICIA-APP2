@@ -31,12 +31,13 @@
 
   <ng-template #sihayDatos>
     <ion-list>
-      <ion-item *ngFor="let item of datosResponse.data; index as i;" (click)="viewImages(item)">
+      <ion-item class="ion-padding-bottom"  *ngFor="let item of datosResponse.data; index as i;" (click)="viewImages(item)">
+        <ion-chip slot="start" [color]="item.SW_INACTIVO === '1' ? 'success' : 'danger'">{{item.SW_INACTIVO === '1' ? 'ACTIVO' : 'INACTIVO' }}</ion-chip>
 
         <ion-label>
-          <ion-text>{{ item.COD_PRODUCTO }}</ion-text><br />
+          <ion-text>{{ item.NOM_PRODUCTO }} / {{item.DESC_NIVEL}}</ion-text>
           <ion-note color="medium" class="ion-text-wrap">
-            {{ item.NOM_PRODUCTO }}
+            {{ item.DESC_GONDOLA }}
           </ion-note>
         </ion-label>
 

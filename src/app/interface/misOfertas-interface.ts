@@ -11,6 +11,7 @@ export interface MisOfertasListaDTO {
   AGRUPACION_EXTRA?: number;
   SW_INACTIVO?: string;
   DESC_NIVEL?: string;
+  DESC_GONDOLA?: string;
 }
 
 export interface MisOfertasImagesDTO extends responseAPIDTO {

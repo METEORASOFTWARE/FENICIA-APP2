@@ -43,4 +43,13 @@ export class DeviceInfoService {
     else 
       return null;
   }
+
+  public updateInfoDeviceLocalStorage(value: string) {
+    
+    let deviceInfo = this.getInfoDeviceLocalStorage();
+    if (deviceInfo !== null && deviceInfo !== undefined) {
+      deviceInfo._uuid_device = value;
+    }
+    localStorage.setItem('_info_device', JSON.stringify(deviceInfo)); 
+  }
 }

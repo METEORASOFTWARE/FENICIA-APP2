@@ -27,21 +27,31 @@
 
         <ng-template #sihayDatos>
           <ion-list>
-            <ion-item *ngFor="let item of datosResponse.data; index as i;" class="ion-padding-bottom" (click)="viewImages(item)">
-              <ion-chip slot="start" [color]="item.SW_INACTIVO === '1' ? 'success' : 'danger'">{{item.SW_INACTIVO === '1' ? 'ACTIVO' : 'INACTIVO' }}</ion-chip>
+            <ion-item-sliding *ngFor="let item of datosResponse.data; index as i;">
 
-              <ion-label>
-                <ion-text>{{item.NOM_PRODUCTO}}</ion-text><br />
-                <ion-note color="medium" class="ion-text-wrap">
-                  {{item.DESC_NIVEL}}
-                </ion-note>
-              </ion-label>
-
-              <div class="metadata-end-wrapper" slot="end">
-                <ion-icon color="medium" name="chevron-forward"></ion-icon>
-              </div>
+              <ion-item class="ion-padding-bottom" (click)="viewImages(item)">
+                <ion-chip slot="start" [color]="item.SW_INACTIVO === '1' ? 'success' : 'danger'">{{item.SW_INACTIVO === '1' ? 'ACTIVO' : 'INACTIVO' }}</ion-chip>
   
-            </ion-item>
+                <ion-label>
+                  <ion-text>{{item.NOM_PRODUCTO}} / {{item.DESC_NIVEL}}</ion-text>
+                  <ion-note color="medium" class="ion-text-wrap">
+                    {{ item.DESC_GONDOLA }}
+                  </ion-note>
+                </ion-label>
+  
+                <div class="metadata-end-wrapper" slot="end">
+                  <ion-icon color="medium" name="chevron-forward"></ion-icon>
+                </div>
+    
+              </ion-item>
+
+              <ion-item-options side="end">
+                <ion-item-option (click)="edit(item)">
+                  <ion-icon slot="icon-only" name="create"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+
+            </ion-item-sliding>
           </ion-list>
 
         </ng-template>        

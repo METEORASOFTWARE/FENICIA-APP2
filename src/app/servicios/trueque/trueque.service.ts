@@ -37,4 +37,8 @@ export class TruequeService {
     return this.envSrv.postQuery(`ImageProductController.php`, data)
   }
 
+  public update(data:URLSearchParams) {
+    return this.envSrv.putQuery(`ProductController.php`, data)
+  }
+
 }

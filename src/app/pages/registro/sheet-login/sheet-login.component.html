@@ -1,0 +1,40 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Ingreso con Identificador</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="FORM">
+    <ion-grid fixed class="ion-padding">
+      <ion-row>
+        <ion-col size="12">
+          <ion-input 
+            type="text" 
+            label="PWAID" 
+            label-placement="floating" 
+            fill="outline" 
+            formControlName="pwaid"
+            placeholder="Digite el identificador..."></ion-input>
+        </ion-col>
+      </ion-row>
+  
+  
+      <ion-row class="ion-padding-top">
+        <ion-col size="12">
+          <ion-button color="primary" [disabled]="FORM.invalid" size="large" expand="block" fill="solid" (click)="login()">
+            Ingresar
+          </ion-button>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row class="ion-padding-top ion-text-center">
+        <ion-col size="12">
+          <ion-button fill="clear" color="dark" (click)="closeModal(false)">
+            Cancelar
+          </ion-button>
+        </ion-col>
+      </ion-row>
+  
+    </ion-grid>
+  </form>
+</ion-content>

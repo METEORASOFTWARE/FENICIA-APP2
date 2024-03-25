@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Device } from '@capacitor/device';
 import { Clipboard } from '@capacitor/clipboard';
-import { ToastController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/servicios/auth/auth.service';
 import { UserCreatedInterface, UserInfoCreatedInterface, UserInfoData, UserInfoInterface } from 'src/app/interface/user-info-interface';
 import { DeviceInfoService } from 'src/app/servicios/device-info/device-info.service';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { MensajesService } from 'src/app/servicios/mensajes/mensajes.service';
 import { MenuService } from 'src/app/servicios/menu/menu.service';
 import { responseAPIDTO } from 'src/app/interface/response-interface';
+import { SheetLoginComponent } from './sheet-login/sheet-login.component';
 
 
 @Component({
@@ -46,7 +47,8 @@ export class RegistroComponent  implements OnInit {
     private registroSrv: RegistroService,
     private router: Router,
     private smsSrv: MensajesService,
-    private menuSrv: MenuService
+    private menuSrv: MenuService,
+    private modalCtrl: ModalController,
   ) { 
     this.INFO_USER = this.authSrv.getInfoUserLocalStorage();
     
@@ -164,7 +166,29 @@ export class RegistroComponent  implements OnInit {
     if (role === 'confirm') {
       this.save();
     }
+  }
 
+  async openSheetLogin() {
+    const modal = await this.modalCtrl.create({
+      component: SheetLoginComponent,
+      backdropDismiss: false,
+      initialBreakpoint : 0.50,
+      breakpoints: [0, 0.25, 0.5, 0.75],
+      handleBehavior: `cycle`,
+      componentProps: {
+        // error
+      } 
+    });
+
+    modal.onDidDismiss()
+    .then( (res:any) => {
+      if (res.data) {
+        this.INFO_USER = this.authSrv.getInfoUserLocalStorage();
+        this.menuSrv.rebuildMenu();
+      }
+    })
+
+    modal.present();
   }
 
 

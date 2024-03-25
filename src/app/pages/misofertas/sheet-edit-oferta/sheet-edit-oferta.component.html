@@ -1,0 +1,73 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Actualizar Oferta</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="FORM">
+    <ion-grid fixed>
+
+      <ion-row>
+        <ion-col size="12">
+
+          <ion-item lines="none" class="ion-padding-start ion-padding-top ion-padding-end">
+            <ion-input 
+              label="NOMBRE DEL SERVICIO *" 
+              [counter]="true"
+              maxlength="100"
+              formControlName="nombre_servicio"
+              labelPlacement="stacked" 
+              placeholder="Máximo 100 caracteres..."></ion-input>
+          </ion-item>
+
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-item lines="none" class="ion-padding-start ion-padding-end">
+            <ion-textarea 
+              label="PRODUCTO O SERVICIO OFRECIDO *" 
+              labelPlacement="stacked" 
+              [counter]="true" 
+              maxlength="256" 
+              formControlName="descripcion_servicio"
+              placeholder="Máximo 256 caracteres...">
+            </ion-textarea>
+          </ion-item>
+
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-item class="ion-padding-start ion-padding-end">
+            <ion-select label="CATEGORÍA" label-placement="stacked" placeholder="--- seleccione ---" formControlName="categoria">
+              <ion-select-option *ngFor="let item of CATEGORIAS" [value]="item.COD_NIVEL">
+                {{ item.DESC_NIVEL }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+  
+  
+      <ion-row class="ion-padding-top">
+        <ion-col size="12">
+          <ion-button color="primary" [disabled]="FORM.invalid" size="large" expand="block" fill="solid" (click)="update()">
+            Actualizar
+          </ion-button>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row class="ion-padding-top ion-text-center">
+        <ion-col size="12">
+          <ion-button fill="clear" color="dark" (click)="closeModal(false)">
+            Cancelar
+          </ion-button>
+        </ion-col>
+      </ion-row>
+  
+    </ion-grid>
+  </form>
+</ion-content>

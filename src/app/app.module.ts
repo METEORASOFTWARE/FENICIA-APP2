@@ -28,6 +28,8 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
 import { SharedModule } from './pages/shared/shared.module';
 import { ModalImagesErrorComponent } from './pages/trueque/modal-images-error/modal-images-error.component';
+import { SheetLoginComponent } from './pages/registro/sheet-login/sheet-login.component';
+import { SheetEditOfertaComponent } from './pages/misofertas/sheet-edit-oferta/sheet-edit-oferta.component';
 
 const config: SocketIoConfig = { url: environment.wsUrl, options: {} };
 
@@ -44,7 +46,9 @@ const config: SocketIoConfig = { url: environment.wsUrl, options: {} };
     MisofertasComponent,
     PropuestaComponent,
     ModalSubcategoriaComponent,
-    ModalImagesErrorComponent
+    ModalImagesErrorComponent,
+    SheetLoginComponent,
+    SheetEditOfertaComponent
   ],
   imports: [
     BrowserModule, 
