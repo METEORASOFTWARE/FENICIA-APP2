@@ -62,7 +62,6 @@ export class RegistroComponent  implements OnInit {
     .subscribe({
       next : (res: any) => {
         this.LABEL_PWAID = res.labelpwaid
-        console.log(res)
       }
     })
     
