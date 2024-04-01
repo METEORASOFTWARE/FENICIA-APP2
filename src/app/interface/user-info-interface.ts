@@ -7,7 +7,7 @@ export interface UserInfoInterface  extends responseAPIDTO{
 export interface UserInfoData {
   COD_CLIE: string;
   NOM_CLIE: string;
-  TEL_CLIE?: any;
+  CELULAR?: any;
   SW_INACTIVO: number;
   E_MAIL?: any;
   PWA_ID: string;

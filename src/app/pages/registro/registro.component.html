@@ -23,7 +23,7 @@
               ></ion-icon>
               <ion-label>{{ UUID_DEVICE?._uuid_device }}</ion-label>
             </ion-item>
-            <ion-item lines="none">
+ <!--            <ion-item lines="none">
               <ion-icon
               title="Copiar ID"
               aria-hidden="true"
@@ -32,7 +32,7 @@
               slot="end"
             ></ion-icon>
               <ion-label>{{ UUID_DEVICE?.platform }} / {{ UUID_DEVICE?.manufacturer  }} / {{  UUID_DEVICE?.operatingSystem }} / {{ UUID_DEVICE?.model }}</ion-label>
-            </ion-item>
+            </ion-item> -->
           </ion-list>
         </ion-col>
       </ion-row>
@@ -60,14 +60,14 @@
         <ng-template #user>
           <ion-col size="12">
             <ion-list>
-              <ion-item>
+<!--               <ion-item>
                 <ion-icon
                   aria-hidden="true"
                   name="person"
                   slot="start"
                 ></ion-icon>
                 <ion-label>{{ INFO_USER?.COD_CLIE }}</ion-label>
-              </ion-item>
+              </ion-item> -->
               <ion-item>
                 <ion-icon
                   aria-hidden="true"
@@ -78,7 +78,7 @@
               </ion-item>
               <ion-item>
                 <ion-icon aria-hidden="true" name="call" slot="start"></ion-icon>
-                <ion-label>{{ INFO_USER?.TEL_CLIE || "S/N" }}</ion-label>
+                <ion-label>{{ INFO_USER?.CELULAR || "S/N" }}</ion-label>
               </ion-item>
               <ion-item>
                 <ion-icon aria-hidden="true" name="mail" slot="start"></ion-icon>
