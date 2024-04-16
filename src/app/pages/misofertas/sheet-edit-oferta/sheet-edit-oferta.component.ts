@@ -37,6 +37,7 @@ export class SheetEditOfertaComponent  implements OnInit {
       descripcion_servicio      : [ this.datos.DESC_GONDOLA?.toString().trim() , [ Validators.required, Validators.maxLength(256) ] ],
       categoria                 : [ this.datos.AGRUPACION_EXTRA , [ Validators.required ] ],
       codigo                    : [ this.datos.COD_PRODUCTO , [ Validators.required ] ],
+      tipotrueque               : [ this.datos.SW_INV_SERIALIZADO , [ Validators.required ] ], // 2.03.261+
     });
   }
 
@@ -62,6 +63,7 @@ export class SheetEditOfertaComponent  implements OnInit {
     productData.append("nombre", this.FORM.get('nombre_servicio')?.value );
     productData.append("descripcion", this.FORM.get('descripcion_servicio')?.value);
     productData.append("agrextra", this.FORM.get('categoria')?.value);
+    productData.append("tipotrueque", this.FORM.get('tipotrueque')?.value);  // 2.03.261+
 
     this.truequeSrv.update(productData)
     .subscribe( {

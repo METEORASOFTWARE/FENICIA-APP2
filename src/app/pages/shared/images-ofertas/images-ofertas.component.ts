@@ -35,4 +35,12 @@ export class ImagesOfertasComponent  implements OnInit {
     })
   }
 
+// 2.03.258+3
+  eliminarFotoBD(index: number): void {
+/*     if (index >= 0 && index < this.fotos.length) {
+      this.fotos.splice(index, 1);
+      this.initSwipper();
+    } */
+  }
+
 }

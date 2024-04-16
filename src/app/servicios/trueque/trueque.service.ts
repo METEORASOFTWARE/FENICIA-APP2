@@ -33,6 +33,11 @@ export class TruequeService {
     return this.envSrv.postQuery(`ProductController.php`, data)
   }
 
+  // 2.03.259
+  public postProductNivel(data:URLSearchParams) {
+    return this.envSrv.postQuery(`ProductNivelController.php`, data)
+  }
+
   public postStoreImage(data:any) {
     return this.envSrv.postQuery(`ImageProductController.php`, data)
   }

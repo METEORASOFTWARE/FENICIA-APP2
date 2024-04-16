@@ -11,4 +11,5 @@ export interface DataDetalleGrupoElementoDTO {
   SW_INACTIVO?: string;
   DESC_NIVEL?: string;
   DESC_GONDOLA?: string;
+  SW_INV_SERIALIZADO?: string;
 }

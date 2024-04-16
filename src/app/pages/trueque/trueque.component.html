@@ -6,7 +6,7 @@
 
     <ion-item lines="none" class="ion-padding-start ion-padding-top ion-padding-end">
       <ion-input 
-        label="NOMBRE DEL SERVICIO *" 
+        label="NOMBRE PARA TU OFERTA" 
         [counter]="true"
         maxlength="100"
         formControlName="nombre_servicio"
@@ -16,7 +16,7 @@
     
     <ion-item lines="none" class="ion-padding-start ion-padding-end">
       <ion-textarea 
-        label="PRODUCTO O SERVICIO OFRECIDO *" 
+        label="DESCRIPCIÓN AMPLIADA" 
         labelPlacement="stacked" 
         [counter]="true" 
         maxlength="256" 
@@ -25,7 +25,18 @@
       </ion-textarea>
     </ion-item>
 
-    <ion-row>
+    <ion-radio-group value="T" formControlName="tipotrueque">
+
+      <ion-item>
+        <ion-radio value="T">Trueque</ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-radio value="D">Donación </ion-radio>
+      </ion-item>
+
+    </ion-radio-group>
+
+   <ion-row> 
       <ion-col size="8">
 
         <ng-container *ngIf="this.FORM.get('nueva_categoria')?.value; else sihaycategoria">
@@ -54,14 +65,16 @@
 
           <ion-buttons slot="secondary">
 
+            <!-- 2.03.258+3, se elimina temporalmente categorías secundarias
             <ion-button (click)="openModalSubcategoria()" [disabled]="!FORM.get('categoria')?.value">
               <ion-icon size="large" name="folder" ></ion-icon>
               <ion-badge slot="end" color="warning">{{SELECT_SUB}}</ion-badge>
-            </ion-button>
+            </ion-button> -->
 
+            <!-- 2.03.258+3, se elimina temporalmente sugerir categoría
             <ion-button id="open-categorias-sheet">
               <ion-icon slot="icon-only" name="settings"></ion-icon>
-            </ion-button>
+            </ion-button> -->
 
             <ion-action-sheet trigger="open-categorias-sheet" header="Nueva Categoria" [buttons]="categoriasActions"></ion-action-sheet>
 
@@ -78,7 +91,7 @@
         <ion-col size="12">
           <ion-text color="primary" class="ion-text-center ion-align-items-center">
             <ion-icon name="image" size="large"></ion-icon>
-            <span class="ion-padding-start">Imágenes del Servicio *</span>
+            <span class="ion-padding-start">Imágenes Asociadas</span>
           </ion-text>
         </ion-col>
       </ion-row>
@@ -87,7 +100,7 @@
         <ion-col size="12">
 
           <ng-container *ngIf="!fotos.length; else sihayfotos">
-            <ion-img src="assets/images/no-image.svg" style="height: 200px;"></ion-img>
+            <ion-img src="assets/images/No-Image-Placeholder.png" style="height: 200px;"></ion-img>
           </ng-container>
 
           <ng-template #sihayfotos>
@@ -95,12 +108,10 @@
             <swiper-container slides-per-view="1" css-mode="true" navigation="true" pagination="true">
   
               <swiper-slide *ngFor = "let foto of fotos; let i = index">
-                <ion-img [src]="foto" style="height: 200px !important; width: 100%; object-fit: cover;"></ion-img>
+                <ion-img [src]="foto" style="height: 200px !important; width: 100%; object-fit: cover;"><br></ion-img>
 
 
                 <ion-icon name="trash" (click)="eliminarFoto(i)" class="icono-borrar"></ion-icon>
-
-
                 <div class="imagen-counter">{{ i + 1 }} / {{ fotos.length }}</div>
 
               </swiper-slide>

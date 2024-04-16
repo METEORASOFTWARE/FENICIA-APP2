@@ -31,7 +31,7 @@
       <ng-container *ngIf="!datosResponse.success; else sihayDatos">
         <ion-row class="ion-padding">
           <ion-col size="12">
-            <ion-img src="assets/images/no-image.svg" style="height: 200px;"></ion-img>
+            <ion-img src="assets/images/No-Image-Placeholder.png" style="height: 200px;"></ion-img>
           </ion-col>
 
           <ion-col size="12" class="ion-text-center">
@@ -52,6 +52,8 @@
   
             <swiper-slide *ngFor = "let foto of datosResponse.data; let i = index">
               <ion-img [src]="foto.URL" style="height: 200px !important; width: 100%; object-fit: cover;" alt="imagen con error al cargar..."></ion-img>
+              <!-- 2.03.258+3 -->
+              <ion-icon name="trash" (click)="eliminarFotoBD(i)" class="icono-borrar"></ion-icon>
 
               <div class="imagen-counter">{{ i + 1 }}</div>
             </swiper-slide>

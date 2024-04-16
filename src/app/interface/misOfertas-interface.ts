@@ -12,6 +12,7 @@ export interface MisOfertasListaDTO {
   SW_INACTIVO?: string;
   DESC_NIVEL?: string;
   DESC_GONDOLA?: string;
+  SW_INV_SERIALIZADO?: string;
 }
 
 export interface MisOfertasImagesDTO extends responseAPIDTO {

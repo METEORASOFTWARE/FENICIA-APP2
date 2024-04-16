@@ -12,7 +12,7 @@
 
           <ion-item lines="none" class="ion-padding-start ion-padding-top ion-padding-end">
             <ion-input 
-              label="NOMBRE DEL SERVICIO *" 
+              label="NOMBRE PARA TU OFERTA" 
               [counter]="true"
               maxlength="100"
               formControlName="nombre_servicio"
@@ -27,7 +27,7 @@
         <ion-col size="12">
           <ion-item lines="none" class="ion-padding-start ion-padding-end">
             <ion-textarea 
-              label="PRODUCTO O SERVICIO OFRECIDO *" 
+              label="DESCRIPCIÓN AMPLIADA" 
               labelPlacement="stacked" 
               [counter]="true" 
               maxlength="256" 
@@ -50,7 +50,17 @@
           </ion-item>
         </ion-col>
       </ion-row>
+      <!-- 2.03.261+ -->
+      <ion-radio-group value="T" formControlName="tipotrueque">
+
+        <ion-item>
+          <ion-radio value="T">Trueque</ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-radio value="D">Donación </ion-radio>
+        </ion-item>
   
+      </ion-radio-group>
   
       <ion-row class="ion-padding-top">
         <ion-col size="12">

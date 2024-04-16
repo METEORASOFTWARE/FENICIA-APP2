@@ -132,7 +132,8 @@ export class TruequeComponent  implements OnInit {
       nueva_categoria           : [ '' ],
       nueva_subcategoria        : [ '' ],
       usuario                   : [ this.INFO_USER?.COD_CLIE],
-      codigo                    : [ '' ]
+      codigo                    : [ '' ],
+      tipotrueque               : [ '' ]  // 2.03.260
     });
   }
 
@@ -167,6 +168,7 @@ export class TruequeComponent  implements OnInit {
         productData.append("usuario", this.FORM.get('usuario')?.value);
         productData.append("descripcion", this.FORM.get('descripcion_servicio')?.value);
         productData.append("agrextra", this.FORM.get('categoria')?.value);
+        productData.append("tipotrueque", this.FORM.get('tipotrueque')?.value);  // 2.03.260
 
         this.truequeSrv.postProduct(productData)
         .subscribe( (response: any) =>  {
@@ -214,6 +216,7 @@ export class TruequeComponent  implements OnInit {
         productData.append("usuario", this.FORM.get('usuario')?.value);
         productData.append("descripcion", this.FORM.get('descripcion_servicio')?.value);
         productData.append("agrextra", this.FORM.get('categoria')?.value);
+        productData.append("tipotrueque",this.FORM.get('tipotrueque')?.value);  // 2.03.260
         
         return this.truequeSrv.postProduct(productData)
         .pipe(
@@ -232,6 +235,33 @@ export class TruequeComponent  implements OnInit {
           })
         )
       }),
+      // 2.03.259
+/*     concatMap( (res: string) => {
+
+        var productNivelData = new URLSearchParams();
+        this.FORM.get("codigo")?.setValue(res.toString())
+
+        productNivelData.append("nivel", this.FORM.get('categoria')?.value);
+        productNivelData.append("codigo", res.toString());
+        productNivelData.append("codbase", "XA29");
+        
+        return this.truequeSrv.postProductNivel(productNivelData)
+        .pipe(
+          catchError( (error: any) => {
+            const newError : NuevoTruequeInterface = error.error;
+            if (! newError.code) {
+              const errorUnknow: NuevoTruequeInterface = {
+                message: `::ERROR AL REALIZAR LA PETICIÓN::`,
+                success: false,
+                name: `BAD REQUEST`,
+                code: "400.1"
+              }
+              return of(errorUnknow)
+            }
+            return of(newError)
+          })
+        )
+      }),  */
 
       concatMap( (res: NuevoTruequeInterface) => {
         
@@ -268,7 +298,7 @@ export class TruequeComponent  implements OnInit {
             map( response => response )
           )
         }
-      }),
+      }), 
     ).subscribe( (res: NuevoTruequeInterface[] ) =>  {
       const temp = res.find(res => !res.success);
       if ( temp && !temp.success ) {

@@ -2,7 +2,7 @@
     position: absolute;
     top: 10px;
     left: 10px;
-    color: white;
+    color: RED;
     font-size: 16px;
   }
 
@@ -10,7 +10,19 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    color: white;
+    color: RED;
     font-size: 24px;
     cursor: pointer;
+  }
+
+  ion-input.nombre_servicio {
+    --background: #373737;
+    --color: #804000;
+    --placeholder-color: #ddd;
+    --placeholder-opacity: 0.8;
+  
+    --padding-bottom: 10px;
+    --padding-end: 10px;
+    --padding-start: 10px;
+    --padding-top: 10px;
   }
